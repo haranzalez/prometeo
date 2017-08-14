@@ -1,0 +1,201 @@
+body {
+    -webkit-print-color-adjust: exact !important;
+}
+
+.certificado {
+    width: 93% !important;
+    background-color: white !important;
+    box-shadow: 0px 3px 5px #ccc;
+    margin: 20px auto;
+    padding: 100px 70px;
+    padding-bottom: 400px;
+    display: block;
+}
+
+.detalles_empresa {
+    text-align: center;
+}
+
+.row,
+.col-md-6,
+.col-md-2,
+.col-md-8,
+.col-md-12 {
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+.col-md-2 {
+    width: 16%;
+    float: left;
+}
+
+.col-md-6 {
+    width: 50%;
+    float: left;
+}
+
+.col-md-8 {
+    width: 66%;
+    float: left;
+}
+
+.col-md-12 {
+    width: 100%;
+    float: left;
+}
+
+.certificado .logo_certificado {
+    width: 100px;
+}
+
+.certificado .cert_logo_container {
+    text-align: left;
+}
+
+.certificado_formato {
+    text-align: center;
+}
+
+.certificado .tabla1 {}
+
+.certificado .tabla1,
+.certificado .tabla2 {
+    margin: 20px 0px !important;
+}
+
+.certificado .tabla1 .row div {
+    margin-top: 9px !important;
+}
+
+.certificado .tabla1 .row {
+    border-bottom: solid 1px #ccc;
+}
+
+.certificado .tabla1 .row div,
+.certificado .tabla2 .row div {
+    padding: 0px !important;
+}
+
+.print-controls {
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+    width: 100%;
+    background-color: rgba(3, 3, 3, .5);
+    padding: 10px 0px;
+}
+
+.printBtn {
+    padding: 10px;
+    border: none;
+    border-radius: 50%;
+    font-size: 18pt;
+    color: #333;
+    background-color: #ccc;
+    margin: 5px;
+}
+
+.printBtn:hover {
+    background-color: white;
+}
+
+.pdfBtn {
+    background-color: darkred;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 50%;
+    font-size: 18pt;
+}
+
+.pdfBtn:hover {
+    background-color: red;
+}
+
+.detalles_empresa {
+    width: 50%;
+    text-align: center;
+}
+
+.detalles_empresa img {
+    width: 500px;
+}
+
+@media print {
+    body {
+        -webkit-print-color-adjust: exact;
+    }
+    .detalles_empresa {
+        text-align: center;
+    }
+    .row,
+    .col-md-6,
+    .col-md-2,
+    .col-md-8,
+    .col-md-12 {
+        margin: 0px !important;
+        padding: 0px !important;
+    }
+    .certificado .logo_certificado {
+        width: 100px;
+    }
+    .certificado .cert_logo_container {
+        text-align: left;
+    }
+    .certificado_formato {
+        text-align: center;
+    }
+    .certificado {
+        background-color: white !important;
+        margin: 0px;
+        padding: 50px 50px;
+        width: 100% !important;
+        height: 100% !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        margin: 0;
+        z-index: 2040;
+        display: block !important;
+    }
+    .certificado .tabla1,
+    .certificado .tabla2 {
+        margin: 20px 0px !important;
+    }
+    .certificado .tabla1 .row div {
+        margin-top: 9px !important;
+    }
+    .certificado .tabla1 .row {
+        border-bottom: solid 1px #ccc;
+    }
+    .certificado .tabla1 .row div,
+    .certificado .tabla2 .row div {
+        padding: 0px !important;
+    }
+    .col-md-2 {
+        width: 16%;
+        float: left;
+    }
+    .col-md-6 {
+        width: 50%;
+        float: left;
+    }
+    .col-md-8 {
+        width: 66%;
+        float: left;
+    }
+    .col-md-12 {
+        width: 100%;
+        float: left;
+    }
+    .headings {
+        -webkit-print-color-adjust: exact;
+        background-color: #ccc;
+        font-weight: 800;
+        padding: 0px 10px !important;
+    }
+    .print-controls {
+        display: none;
+    }
+}
