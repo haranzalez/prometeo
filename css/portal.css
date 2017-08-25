@@ -1,0 +1,551 @@
+ /*PORTAL STYLES*/
+ 
+ .logo_corporativo {
+     display: none;
+     text-align: center;
+     height: 80px;
+ }
+ 
+ .logo_corporativo img {
+     width: 80px !important;
+ }
+ 
+ .wrapper {
+     background-color: white;
+     position: relative;
+     /*max-width: 1000px;*/
+     margin: auto;
+     overflow: hidden;
+     border-radius: 3px;
+     /*max-height: 600px;
+     min-height: 600px;*/
+     width: 95%;
+     height: 100%;
+     box-shadow: 0px 2px 1px #999;
+ }
+ 
+ .main {
+     background-color: white;
+     width: 100%;
+     height: auto;
+     position: relative;
+     /* min-height: 600px;
+     max-height: 600px; */
+     height: 100%;
+ }
+ 
+ .sideBar {
+     background-color: #E9E9E9;
+     height: 80%;
+     position: relative;
+     box-shadow: 0.5px 0px 2px #666;
+     /* min-height: 600px;
+     max-height: 600px; */
+     height: 100%;
+ }
+ 
+ .mainFolderFileList ul {
+     list-style: none !important;
+ }
+ 
+ .cPannel,
+ .cPannelBottom {
+     list-style: none;
+     margin-top: 10px;
+     border-top: 1px solid #ddd;
+     padding: 0px;
+     margin: 0px;
+     width: 100%;
+ }
+ 
+ .cPannelBottom {
+     position: absolute;
+     bottom: 0;
+     border-top: 1px solid #ddd;
+     width: 100%;
+ }
+ 
+ .cPannel li,
+ .cPannelBottom li {
+     padding: 0px;
+     margin: 0px;
+     width: 100%;
+ }
+ 
+ .cPannel li a,
+ .cPannelBottom li a {
+     display: block;
+     width: 100%;
+     padding: 10px;
+     padding-left: 20px;
+     color: #333;
+     text-decoration: none;
+     font-size: 9pt;
+ }
+ 
+ .cPannelBottom li a {
+     padding: 20px;
+ }
+ 
+ .cPannel li a:hover,
+ .cPannelBottom li a:hover,
+ .cPannel li a:focus,
+ .cPannelBottom li a:focus {
+     background-color: #ddd;
+ }
+ 
+ .cPannel li a i,
+ .cPannelBottom li a i {
+     font-size: 16pt;
+     margin-right: 5px;
+ }
+ 
+ .logOutBtn:hover {
+     background-color: darkred !important;
+     color: white !important;
+ }
+ 
+ .headerPortal {
+     padding: 30px 80px;
+ }
+ 
+ .slogan {}
+ 
+ .slogan p {
+     text-align: center;
+     letter-spacing: 0 !important;
+     font-size: 9pt;
+     color: black;
+     line-height: 1;
+ }
+ /*JQUERY UI */
+ 
+ #dialog-message .ui-dialog-titlebar {
+     background-color: green;
+     color: white;
+ }
+ 
+ #crearFolderForm .ui-dialog-titlebar {
+     background-color: blue;
+     color: white;
+ }
+ /*SUB CLASES*/
+ 
+ a:focus,
+ button:focus,
+ input:focus {
+     outline: none;
+ }
+ 
+ #dialog-message,
+ #formDialog,
+ #dialogo_confirmacion {
+     display: none;
+ }
+ 
+ #formDialog {
+     padding: 15px 20px !important;
+     overflow: unset;
+     font-size: 8pt;
+     line-height: 1;
+ }
+ 
+ #formDialog select,
+ input[type=text] {
+     width: 100%;
+     height: 30
+ }
+ 
+ #dialogo_confirmacion .confirmacion_mensaje {
+     font-size: 10pt;
+     padding-top: 20px !important;
+     padding-right: 0px !important;
+     line-height: 1;
+     /* width: 240px; */
+     display: block;
+     margin: auto;
+     margin-left: 50;
+ }
+ 
+ #dialog-message .dialog_mess {
+     font-size: 10pt;
+     padding-top: 10px !important;
+     padding-right: 0px !important;
+     line-height: 1;
+     /* width: 240px; */
+     display: block;
+     margin: auto;
+     margin-left: 35;
+ }
+ 
+ .borde_radio_3px {
+     border-radius: 3px;
+ }
+ 
+ .row {
+     margin: 0px !important;
+     padding: 0px !important;
+ }
+ 
+ .col-md-1,
+ .col-md-2,
+ .col-md-3,
+ .col-md-4,
+ .col-md-5,
+ .col-md-6,
+ .col-md-7,
+ .col-md-8,
+ .col-md-9,
+ .col-md-10,
+ .col-md-11,
+ .col-md-12,
+ .col-2,
+ .col-10 {
+     margin: 0px !important;
+     padding: 0px !important;
+ }
+ /*SUB CLASES*/
+ 
+ .logoPortal {
+     width: 170px;
+ }
+ 
+ .loadingCtn {
+     width: 100%;
+     height: 100%;
+     position: absolute;
+     z-index: 2020;
+     background-color: rgba(255, 255, 255, .5);
+     display: none;
+ }
+ 
+ .loading {
+     z-index: 2020;
+     margin-top: 15% !important;
+     width: 82px;
+     height: 82px;
+     background: url(../img/ripple.svg);
+     background-size: 82px 82px;
+     margin: auto;
+ }
+ 
+ .certificado {
+     display: none;
+ }
+ 
+ .dash {
+     position: relative;
+     background-color: transparent !important;
+     height: 500px;
+ }
+ 
+ .empBox {
+     background-color: white;
+     font-size: 8pt !important;
+     padding: 10px 0px !important;
+     width: 100%;
+     font-size: 8pt !important;
+     cursor: pointer;
+ }
+ 
+ .empRowCtnr:nth-child(odd) {
+     background-color: #eee;
+ }
+ 
+ .empBox:hover .nitEmp {
+     text-decoration: underline;
+ }
+ 
+ .empBox .col-md-1 {}
+ 
+ .empBox img {
+     width: 50%;
+     margin: auto;
+     display: block;
+ }
+ 
+ .empBox p {
+     padding: 8px;
+     width: 100%;
+     white-space: nowrap;
+ }
+ 
+ .empresas_contenedor,
+ .fileContainer {
+     display: none;
+ }
+ 
+ .empresas_contenedor {
+     width: 95%;
+     margin: auto;
+     box-shadow: 0px 1px 1.5px #aaa;
+ }
+ 
+ .empresas_contenedor h4 {
+     border-bottom: solid 1px #eee;
+     padding: 20px;
+     margin-top: 50px;
+     margin-bottom: 0px !important;
+     color: #333 !important;
+ }
+ 
+ .empresas_contenedor .empRowCtnr {
+     max-height: 700px;
+     overflow: auto;
+ }
+ 
+ .datos_empresa_contenedor {
+     width: 90%;
+     margin: auto;
+ }
+ 
+ .datos_de_empresa {
+     font-size: 9pt !important;
+ }
+ 
+ .datosEmpresa {
+     background-color: white;
+     box-shadow: 0px 2px 0px #ddd;
+     border: solid 1px #eee;
+ }
+ 
+ .perCtner {
+     background-color: white;
+     box-shadow: 0px 2px 0px #ddd;
+     border: solid 1px #eee;
+ }
+ 
+ .formatoCtner {
+     background-color: white;
+     box-shadow: 0px 2px 0px #ddd;
+     padding: 0px;
+     width: 95%;
+     border: solid 1px #eee;
+ }
+ 
+ .formato,
+ .period {
+     color: #333;
+ }
+ 
+ .formato:hover,
+ .period:hover {
+     background-color: #333;
+     color: #ccc;
+     cursor: pointer;
+     text-decoration: none;
+ }
+ 
+ .formato:focus,
+ .period:focus {
+     background-color: #333;
+     color: #ccc;
+ }
+ 
+ .generar_certificado_boton {
+     padding: 15px 0px;
+     text-align: center;
+     width: 100%;
+ }
+ 
+ .generar_certificado_boton .imprimirBtn,
+ .generar_certificado_boton .pdfBtn,
+ .generar_certificado_boton .guardarBtn {
+     background-color: darkgreen;
+     border: none;
+     color: white;
+     padding: 8px;
+     font-size: 18pt;
+     box-shadow: 0px 0px 5px #aaa;
+     display: none;
+ }
+ 
+ .generar_certificado_boton .imprimirBtn:hover {
+     background-color: green;
+ }
+ 
+ .generar_certificado_boton .pdfBtn {
+     background-color: darkred;
+ }
+ 
+ .generar_certificado_boton .pdfBtn:hover {
+     background-color: red;
+ }
+ 
+ .generar_certificado_boton .guardarBtn {
+     background-color: orangered;
+ }
+ 
+ .generar_certificado_boton .guardarBtn:hover {
+     background-color: orange;
+ }
+ 
+ .fileContainer {
+     position: relative;
+     width: 95%;
+     margin: auto;
+     margin-top: 50px;
+     box-shadow: 0px 1px 2px #aaa;
+ }
+ 
+ .fileContainer h4 {
+     color: #333;
+     padding: 20px;
+     border-bottom: 1px solid #eee;
+     margin: 0 !important;
+ }
+ 
+ .fileContainer .row {
+     max-height: 450px;
+     overflow: auto;
+ }
+ 
+ .docRow {
+     color: white;
+     padding: 5px 7px !important;
+     position: relative !important;
+ }
+ 
+ .docRow:nth-child(odd) {
+     background-color: #F2F2F2;
+ }
+ 
+ .docRow .docRowInnerCtnr {
+     position: relative;
+     padding: 10px !important;
+ }
+ 
+ .filesLoading {
+     display: none;
+     position: absolute;
+     left: 50%;
+     top: 20%;
+ }
+ 
+ .folderlist a {
+     display: inline !important;
+     background-color: transparent !important;
+     padding: 0px !important;
+     padding-left: 0px !important;
+ }
+ 
+ .folderlist a:hover {
+     background-color: transparent !important;
+     text-decoration: underline !important;
+ }
+ 
+ .delfile {
+     font-size: 12pt !important;
+     color: #ddd;
+     position: absolute;
+     top: 10;
+     right: 15;
+ }
+ 
+ .delfile:hover {
+     color: darkred !important;
+     cursor: pointer;
+ }
+ 
+ .newFolderBtn,
+ .newDocumBtn {
+     padding: 8px;
+     position: relative !important;
+     border-radius: 3px;
+     border: 1px solid #eee;
+     box-shadow: 0px 1px 1px #eee;
+     background-color: white;
+     color: #ddd;
+     transition: .3s ease-in-out;
+     margin: 5px;
+ }
+ 
+ .fileContrBtns {
+     position: absolute;
+     width: 100px;
+     right: 15px;
+     top: 10px;
+     text-align: center;
+     font-size: 10px;
+ }
+ 
+ .newFolderBtn:hover,
+ .newDocumBtn:hover {
+     color: #333;
+ }
+ 
+ .folderBtn {
+     color: #333;
+     font-size: 7pt !important;
+ }
+ 
+ .detalles_folder {
+     display: none;
+     position: absolute;
+     width: 100%;
+     height: 100%;
+     z-index: 2020;
+     padding: 50px 150px;
+     background-color: rgba(35, 35, 45, 1);
+ }
+ 
+ .cambiarDatosFormCtnr {
+     display: none;
+     width: 95%;
+     margin: auto;
+     margin-top: 50px;
+     box-shadow: 0px 1px 2px #aaa;
+ }
+ 
+ .cambiarDatosFormCtnr h4 {
+     padding: 20px;
+     border-bottom: solid 1px #eee;
+ }
+ 
+ .cambiarDatosFormCtnr .ctn {
+     width: 100%;
+     margin: auto;
+     background-color: white;
+ }
+ 
+ .cambiarDatosFormCtnr .ctn .row .col-md-6 {
+     position: relative !important;
+ }
+ 
+ .cambiarDatosFormCtnr .ctn .row {
+     border-bottom: 1px solid #fefe;
+ }
+ 
+ .cambiarDatosFormCtnr .ctn .row .col-md-6 div {
+     height: 50px;
+     line-height: 4;
+     letter-spacing: 1.3;
+ }
+ 
+ .cambiarDatosFormCtnr .ctn .row .col-md-6:nth-child(odd) div {
+     padding-left: 20px;
+ }
+ 
+ .cambiarDatosFormCtnr .ctn .row .col-md-6:nth-child(even) .row {
+     border-bottom: none;
+ }
+ 
+ .cambiarDatosFormCtnr .ctn .row .col-md-6:nth-child(even) .row div:nth-child(even) {
+     text-align: center;
+ }
+ 
+ .cambiarDatosFormCtnr .ctn .row .col-md-6:nth-child(even) .row div:nth-child(odd) p {
+     color: #ccc;
+ }
+ 
+ .cambiarDatosFormCtnr .ctn .row .col-md-6:nth-child(even) .row div:nth-child(even) i {
+     line-height: 3;
+     font-size: 15pt;
+     color: #ccc;
+ }
+ 
+ .cambiarDatosFormCtnr .ctn .row .col-md-6:nth-child(even) .row div:nth-child(even) i:hover {
+     color: #333;
+     cursor: pointer;
+ }
+ /*-----------------------------------------------------*/

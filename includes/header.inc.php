@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="css/default.css">
     <link rel="stylesheet" href="css/default.date.css">
     <link rel="stylesheet" href="css/style.css">
+    
     <link rel="stylesheet" media="print" href="css/certificado.css">
 
     

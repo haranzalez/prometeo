@@ -52,7 +52,26 @@ error_reporting(E_ALL);
         {
             $fh = fopen($this->dir.'/'.$file, 'w');
             fclose($fh);
-            unlink($file);
+            unlink($this->dir.'/'.$file);
+            return 1;
+        }
+        public function del_dir($path)
+        {
+            $realPath = $this->dir.'/'.$path;
+            if(is_dir($realPath) === true)
+            {
+                $files = array_diff(scandir($realPath), array('.', '..'));
+        
+                foreach ($files as $file)
+                {
+                    Delete($realPath . '/' . $file);
+                }
+                return rmdir($realPath);
+            }else if(is_file($realPath) === true)
+            {
+                return unlink($realPath);
+            }
+            return false;
         }
         public function new_dir($name)
         {
@@ -70,6 +89,7 @@ error_reporting(E_ALL);
             $pkg->files = $files;
             return $pkg;
         }
+       
     }
 
     

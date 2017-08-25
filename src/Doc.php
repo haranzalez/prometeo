@@ -1,6 +1,7 @@
 <?php 
 	ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
+    include 'dbcred.php';
     error_reporting(E_ALL);
 
     class Doc {
@@ -20,13 +21,13 @@
             $m = date('n');
             return $type.$y.$m.rand(100, 1000);
         }
-        public function vars(){
+        /*public function vars(){
             echo $this->generar_certificadoSQL.'<br/>';
             echo $this->emprsasSQL.'<br/>';
             echo $this->getFieldsSQL.'<br/>';
             echo $this->formatosSQL.'<br/>';
             echo $this->periodosSQL.'<br/>';
-        }
+        }*/
         public function emprsas()
         {
             
@@ -241,6 +242,8 @@
 ?>
 
 <?php 
+
+
     /* periodos: drop table tbla_tmpral; 
  CREATE TEMP TABLE tbla_tmpral AS
     SELECT *

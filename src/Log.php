@@ -58,8 +58,11 @@
                             $this->_user = $row['client_name'].' '.$row['client_lastname'];
 
                             $_SESSION['user'] =  $this->_user;
+                            $_SESSION['user_name'] = $row['client_name'];
+                            $_SESSION['user_lastname'] = $row['client_lastname'];
                             $_SESSION['user_full_name'] = $row['client_name'] . ' ' . $row['client_lastname'];
                             $_SESSION['sess'] = $this->_sessid;
+                            $_SESSION['email'] = $row['client_email'];
                             $_SESSION['nit'] = $row['client_cedula'];
 
                             $sqlUpdt = "UPDATE users_web SET client_session_id = '$this->_sessid' WHERE client_email = '$username' AND client_password = '$pass'";
