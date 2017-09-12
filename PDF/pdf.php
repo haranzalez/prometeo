@@ -6,8 +6,9 @@ if(!isset($_SESSION))
 ob_start();
 
 include '../src/dbcred.php';
-require('fpdf.php');
-include '../src/Doc.php';
+
+require_once('fpdf.php');
+require_once('../src/Doc.php');
 
 
 
@@ -18,18 +19,19 @@ class PDF extends FPDF
     protected $col = 0; 
     protected $y0;      
 
-    public function __construct($formato, $mesini, $mesfin)
+    public function __construct($formato, $mesini, $mesfin, $id_empresa)
     {
         include '../src/dbcred.php';
         $orientation='P'; $unit='mm'; $format='A4';
         parent::__construct($orientation,$unit,$format);
         $this->title = '';
         $this->db = $db;
-        $this->nit = $_SESSION['nit'];
-        $this->email = $_SESSION['email'];
+        $this->nit = (isset($_SESSION['nit']))?$_SESSION['nit']:false;
+        $this->email = (isset($_SESSION['email']))?$_SESSION['email']:false;
         $this->formato = (isset($formato))?$formato:null;
         $this->mesini = (isset($mesini))?$mesini:null;
         $this->mesfin = (isset($mesfin))?$mesfin:null;
+        $this->id_empresa = (isset($id_empresa))?$id_empresa:null;
         $this->docClass = new Doc($this->db);
         $this->data_certificate = ($this->data_certificate() != false)?$this->data_certificate():array();
         $this->notaY = 165;
@@ -65,10 +67,9 @@ class PDF extends FPDF
                 $this->tabla2();
                 $this->nota();
                 $raw = $this->Output('S');
-                
                 return $raw;
             }else if(count($this->data_certificate) == 0){
-               echo "Perdona la molestia, pero se a producido un error generando su certificado. El administrador ya ah sido notificado. Porfavor trate de nuevo mas tarder. Gracias por su paciencia.";
+               echo "Se a producido un error<br/>Ref: doc_out()";
             }
 
         }
@@ -85,8 +86,7 @@ class PDF extends FPDF
         {
             return false;
         }else{
-            $fields = $this->docClass->getFields($this->nit);
-            return $this->docClass->generar_certificado($this->formato, $this->mesini, $this->mesfin);
+            return $this->docClass->generar_certificado($this->formato, $this->mesini, $this->mesfin, $this->id_empresa);
         }
         
     }
@@ -95,9 +95,10 @@ class PDF extends FPDF
         if(isset($_POST['img']))
         {
             $d = $_POST['img'];
+           
             $w = 20; $h = 13;
             $raw = base64_decode($d);
-            $file = $_SERVER['DOCUMENT_ROOT'] . '/promTest/PDF/temp/'.rand() . '.jpeg';
+            $file = $_SERVER['DOCUMENT_ROOT'] . '/PDF/temp/'.rand() . '.jpeg';
             $success = file_put_contents($file, $raw);
             $this->Image($file,$w,$h,50,40);
             unlink($file);
@@ -196,7 +197,7 @@ class PDF extends FPDF
         
         $this->SetFont('Arial','B',11);
         $this->SetTextColor(3,3,3);
-        $this->Cell(0,10,$this->data_certificate[0]['nmbre_rzon_scial'],0,0,'C',false);
+        $this->Cell(0,10,utf8_decode($this->data_certificate[0]['nmbre_trcro']),0,0,'C',false);
         $this->Ln(5);
         $this->SetX($x);
         $this->Cell(0,10,'NIT:'.number_format($this->data_certificate[0]['id_emprsa']),0,0,'C',false);
@@ -210,6 +211,9 @@ class PDF extends FPDF
         $this->Ln(5);
         $this->SetX($x);
         $this->Cell(0,10,$this->data_certificate[0]['nmbre_mncpio'].', '.$this->data_certificate[0]['nmbre_pais'],0,0,'C',false);
+        $this->Ln(5);
+        $this->SetX($x);
+        $this->Cell(0,10,$this->data_certificate[0]['web_site'],0,0,'C',false);
         
     }
     function tabla1()
@@ -224,7 +228,7 @@ class PDF extends FPDF
         $this->Ln();
         $this->cell(83,6,'Razon Social:','B');
         $this->SetFont('Arial','',9);
-        $this->cell(83,6,$this->data_certificate[0]['nmbre_rzon_scial'],'B');
+        $this->cell(83,6,utf8_encode($this->data_certificate[0]['nmbre_trcro']),'B');
         $this->Ln();
         $this->SetFont('Arial','B',9);
         $this->cell(83,6,'NIT:','B');
@@ -241,24 +245,22 @@ class PDF extends FPDF
     function tabla2()
     {
         // Header
-        $header = array('Concepto', 'Taza', 'Base', 'Retencion');
+        $header = array('Concepto', 'Tasa', 'Base', 'Retencion');
         $data = array();
         if(count($this->data_certificate) > 1)
         {
             for ($i=0; $i < count($this->data_certificate); $i++) { 
-                $data[] = strtolower($this->data_certificate[$i]['nmbre_cncpto']);
+                $data[] = $this->data_certificate[$i]['nmbre_cncpto'];
                 $data[] = $this->data_certificate[$i]['prcntje_aplccion'].'%';
-                $data['val1'] = number_format(($this->data_certificate[$i]['vlor_grvble'] * $this->data_certificate[$i]['prcntje_aplccion'])/100);
-                $data['val2'] = number_format($this->data_certificate[$i]['vlor_grvble']);
-             }
+                $data[] = ($this->data_certificate[$i]['vlor_grvble'] * $this->data_certificate[$i]['prcntje_aplccion'])/100;
+                $data[] = $this->data_certificate[$i]['vlor_grvble'];
+            }
         }else if(count($this->data_certificate) == 1){
-            $data[] = strtolower($this->data_certificate[0]['nmbre_cncpto']);
-            $data[] = $this->data_certificate[0]['prcntje_aplccion'].'%';
-            $data[] = number_format(($this->data_certificate[0]['vlor_grvble'] * $this->data_certificate[0]['prcntje_aplccion'])/100);
-            $data[] = number_format($this->data_certificate[0]['vlor_grvble']);
+            $data['nombre'] = $this->data_certificate[0]['nmbre_cncpto'];
+            $data['porce'] = $this->data_certificate[0]['prcntje_aplccion'].'%';
+            $data['val1'] = ($this->data_certificate[0]['vlor_grvble'] * $this->data_certificate[0]['prcntje_aplccion'])/100;
+            $data['val2'] = $this->data_certificate[0]['vlor_grvble'];
         }
-        
-        
         
         $this->SetY(102);
         $this->SetFont('Arial','',10);
@@ -266,7 +268,6 @@ class PDF extends FPDF
         $this->SetDrawColor(180,180,180);
         $this->Cell(0,10,'Por los conceptos que se detallan a continuacion:',0,0,'L',false);
         $this->Ln();
-        
         $headerCellWidth = array(83,28,28,27);
         $j = 0;
         foreach($header as $col)
@@ -278,61 +279,67 @@ class PDF extends FPDF
         }
         $this->Ln();
         $this->SetFont('Arial','',10);
-           
-        // Data
+
+      
+        $j = 0;
         $i = 0;
         $n  = 0;
         $val1 = array();
         $val2 = array();
-        foreach($data as $key => $row)
+    
+       foreach ($data as $key => $value) {
+        if(count($this->data_certificate) == 1){
+            if($key == 'nombre'){
+            $this->Cell(83,6,$value,0);
+            }else if($key == 'porce'){
+            $this->Cell(28,6,$value,0);
+            }else if($key == 'val1'){
+            $val1[] = $value;
+            $this->Cell(28,6,number_format($value, 2, ',', ','),0);
+            }else if($key == 'val2'){
+            $val2[] = $value;
+            $this->Cell(27,6,number_format($value, 2, ',', ','),0);
+            }
+        }else if(count($this->data_certificate) > 1)
         {
-           if($i <= 3)
-           {
-                if($key == "val1"){
-                    $val1[] = str_replace(',', '', $row); 
-                }else if($key == "val2"){
-                    $val2[] = str_replace(',', '', $row);
-                }  
-               $this->Cell($headerCellWidth[$i],6,$row,0);
-               $i++;
-           }else{
-               if($i >= 3){
-                 $this->Ln();
-               }
-               if($key == "val1"){
-                    $val1[] = str_replace(',', '', $row); 
-                }else if($key == "val2"){
-                    $val2[] = str_replace(',', '', $row);
-                }  
-            
-               $i = 0;
-               $this->Cell($headerCellWidth[$i],6,$row,0);
-               $i++;
-               $n++;
-               if($n > 3)
-               {
-                 $this->notaY += 2;
-               }
-               
-           }
+            if($i > 3){
+                $this->Ln();
+                $i = 0;
+            }
+            if(is_numeric($value)){
+                if ($j % 2 == 0){
+                    $val1[] = $value;
+                }else{
+                    $val2[] = $value;
+                }
+                
+                $this->Cell($headerCellWidth[$i],6,number_format($value, 2, ',', ','),0);
+            }else{
+                $this->Cell($headerCellWidth[$i],6,$value,0);
+            }
+
         }
-        if(count($data) > 4){
-            
-            $totalBase = array_sum($val1);
-            $totalRete = array_sum($val2);
-            
-        }else{
-            $totalBase = (str_replace( ',', '', $data[2]));
-            $totalRete = (str_replace( ',', '', $data[3]));
-        }
+        $j++;
+        $i++;
+          
+          
+       }
+
+         
+             
+        $totalBase = array_sum($val1);
+        $totalRete = array_sum($val2);
+             
+       
+        
         
         
         $this->Ln();
         $this->SetFont('Arial','B',10);
         $this->Cell(111,6,'TOTAL:','T',0,'R');
         $this->SetFont('Arial','',10);
-        $this->Cell(28,6,number_format($totalBase),'T');
-        $this->Cell(28,6,number_format($totalRete),'T');
+        $this->Cell(28,6, number_format($totalBase, 2, ',', ','),'T');
+        $this->Cell(28,6,number_format($totalRete, 2, ',', ','),'T');
         $this->Ln();
     }
     function nota()
@@ -394,7 +401,7 @@ class PDF extends FPDF
 
 
             $file = $this->data_certificate[0]['nmbre_rzon_scial'].'_'.$this->data_certificate[0]['nmbre_frmto'].'.pdf';
-            if($this->check_file($file, $fname) === false)
+            if($this->check_file($fname) === false)
             {
                 $this->SetMargins(20, 10, 20);
                 $this->AddPage();
@@ -407,12 +414,12 @@ class PDF extends FPDF
                 $this->tabla1();
                 $this->tabla2();
                 $this->nota();
-    
+                
                 $raw = pg_escape_bytea($this->Output('S'));
     
                 $sql = "INSERT INTO usrios_web_mnjo_flders_det
                 (email_usrio,
-                nombre_folder,
+                nmro_flder,
                 asnto_dcmnto,
                 fcha_dcmnto,
                 nmbre_pdf )
@@ -429,10 +436,9 @@ class PDF extends FPDF
                 }else{
                     return false;
                 }
-
             }else{
-                $pieces = explode('.', $file);
-                $file = $pieces[0].'_'.rand().'.'.$pieces[1];
+                // $pieces = explode('.', $file);
+                // $file = $pieces[0].'_'.rand().'.'.$pieces[1];
                 $this->SetMargins(20, 10, 20);
                 $this->AddPage();
                 $this->title = 'CERTIFICADO DE '.$this->data_certificate[0]['nmbre_frmto'].' ANO GRAVABLE '.substr($this->data_certificate[0]['ano_mes_fnal'],0,4);
@@ -449,7 +455,7 @@ class PDF extends FPDF
     
                 $sql = "INSERT INTO usrios_web_mnjo_flders_det
                 (email_usrio,
-                nombre_folder,
+                nmro_flder,
                 asnto_dcmnto,
                 fcha_dcmnto,
                 nmbre_pdf )
@@ -473,34 +479,9 @@ class PDF extends FPDF
         }
         
     }
-    function return_pdf($doc_id)
+    function check_file($fname)
     {
-        $sql = "SELECT nmbre_pdf FROM usrios_web_mnjo_flders_det WHERE email_usrio = '".$this->email."' AND id_dcmnto = ".$doc_id;
-        $res = $this->db->query($sql);
-        $row = $res->fetch(PDO::FETCH_ASSOC);
-        $result = pg_unescape_bytea($row['nmbre_pdf']);
-        return $result;
-    }
-    function all_pdf(){
-        $sql = "SELECT asnto_dcmnto FROM usrios_web_mnjo_flders_det WHERE email_usrio = '".$this->email."'";
-        $res = $this->db->query($sql);
-        $arr = array();
-        $row = $res->fetch(PDO::FETCH_ASSOC);
-        if(count($row) > 0)
-        {
-            while($row){
-                $arr['nombre'] = $row['asnto_dcmnto'].'.pdf';
-            }
-            return $arr;
-        }else{
-            $arr['nofiles'] = 'No hay documentos.';
-            return $arr;
-        }
-        
-    }
-    function check_user()
-    {
-        $sql = "SELECT COUNT(*) FROM usrios_web_mnjo_flders_enc WHERE email_usrio = '".$this->email."'";
+        $sql = "SELECT COUNT(*) FROM usrios_web_mnjo_flders_enc WHERE email_usrio = '".$this->email."' AND nmbre_flder = '".$fname."'";
         $res = $this->db->query($sql);
         $row = $res->fetch(PDO::FETCH_ASSOC);
         if($row['count'] != 0)
@@ -510,164 +491,7 @@ class PDF extends FPDF
             return false;
         }
     }
-    function check_file($name, $fname)
-    {
-        $sql = "SELECT COUNT(*) FROM usrios_web_mnjo_flders_det WHERE asnto_dcmnto = '".$name."' AND email_usrio = '".$this->email."' AND nombre_folder = '".$fname."'";
-        $res = $this->db->query($sql);
-        $row = $res->fetch(PDO::FETCH_ASSOC);
-        if($row['count'] != 0)
-        {
-            return true;
-        }else{
-            return false;
-        }
-    }
-    function check_folder($name)
-    {
-        $sql = "SELECT COUNT(*) FROM usrios_web_mnjo_flders_enc WHERE nmbre_flder = '".$name."' AND email_usrio = '".$this->email."'";
-        $res = $this->db->query($sql);
-        $row = $res->fetch(PDO::FETCH_ASSOC);
-        if($row['count'] != 0)
-        {
-            return true;
-        }else{
-            return false;
-        }
-    }
-    function create_folder($name)
-    {
-        if($this->check_user() === false && isset($name))
-        {
-            $bnum = $this->generar_id('BE');
-
-            $sql = "INSERT INTO usrios_web_mnjo_flders_enc (email_usrio,
-            nmro_flder,
-            nmbre_flder,
-            nmro_orden)
-            VALUES('".$this->email."',
-            '".$bnum."',
-            'Bandeja de entrada',
-            1)";
-            $res = $this->db->query($sql);
-
-            if($res && $this->check_folder($name) !== true){
-                $fnum = $this->generar_id('F');
-                $sql = "INSERT INTO usrios_web_mnjo_flders_enc (email_usrio,
-                nmro_flder,
-                nmbre_flder)
-                VALUES('".$this->email."',
-                '".$fnum."',
-                '".$name."')";
-                $res = $this->db->query($sql);
-                if($res)
-                {
-                    return true;
-                }
-
-            }else if($this->check_folder($name) === true)
-            {
-                return 'Folder already exist';
-            }
-        }else if($this->check_user() === true && isset($name)){
-
-            if($this->check_folder($name) !== true){
-
-                $fnum = $this->generar_id('F');
-
-                $sql = "INSERT INTO usrios_web_mnjo_flders_enc (email_usrio,
-                nmro_flder,
-                nmbre_flder)
-                VALUES('".$this->email."',
-                '".$fnum."',
-                '".$name."')";
-                $res = $this->db->query($sql);
-
-                if($res)
-                {
-                    return true;
-                }
-
-            }else if($this->check_folder($name) === true)
-            {
-                return 'Folder already exist';
-            }
-           
-        }else{
-
-            return false;
-
-        }
-        
-       
-    }
-    function folder_list()
-    {
-        $sql = "SELECT * FROM usrios_web_mnjo_flders_enc WHERE email_usrio = '".$this->email."'";
-        $res = $this->db->query($sql);
-
-        $main = array();
-        $main['Bandeja de entrada'] = array();
-        $folder = array();
-        $i = 0;
-        while($row = $res->fetch(PDO::FETCH_ASSOC))
-        {
-            if($row['nmbre_flder'] == 'Bandeja de entrada')
-            {
-                $sqlfi = "SELECT * FROM usrios_web_mnjo_flders_det WHERE email_usrio = '".$this->email."' AND nombre_folder = 'Bandeja de entrada'";
-                $resfi = $this->db->query($sqlfi);
-                while($rowfi = $resfi->fetch(PDO::FETCH_ASSOC))
-                {
-                    
-                    $folder[$rowfi['asnto_dcmnto']] = $rowfi['id_dcmnto'];
-                }
-            }else{
-                $sqlf = "SELECT * FROM usrios_web_mnjo_flders_det WHERE email_usrio = '".$this->email."' AND nombre_folder = '".$row['nmbre_flder']."'";
-                $resf = $this->db->query($sqlf);
-                $file = array();
-                while($rowf = $resf->fetch(PDO::FETCH_ASSOC))
-                {
-                    array_push($file, $rowf['asnto_dcmnto'].'-'.$rowf['id_dcmnto']);
-                }
-                $folder[$row['nmbre_flder']] = $file;
-            }
-
-        }
-        $main['Bandeja de entrada'] = $folder;
-        return $main;
-
-    }
-
-    function del_doc($doc_id)
-    {
-        $sql = "DELETE FROM usrios_web_mnjo_flders_det WHERE email_usrio = '".$this->email."' AND id_dcmnto = ".$doc_id;
-        $res = $this->db->query($sql);
-        if($res)
-        {
-            return true;
-        }else{
-            return false;
-        }
-    }
-
-    function del_folder($fname)
-    {
-        $sqlfiles = "DELETE FROM usrios_web_mnjo_flders_det WHERE email_usrio = '".$this->email."' AND nombre_folder = '".$fname."'";
-        $resFiles = $this->db->query($sqlfiles);
-        if($resFiles)
-        {
-            $sql = "DELETE FROM usrios_web_mnjo_flders_enc WHERE email_usrio = '".$this->email."' AND nmbre_flder = '".$fname."'";
-            $res = $this->db->query($sql);
-            if($res)
-            {
-                return true;
-            }else{
-                return false;
-            }
-
-        }
-        
-
-    }
+    
     
     
 

@@ -1,4 +1,10 @@
-<?php 
+
+<?php
+/*!
+ * controler.php
+ * Version BETA 
+ * Hans Christian Aranzalez - <haranzalez@gmail.com>
+ */ 
     ob_start();
     session_start();
     ini_set('display_errors', 1);
@@ -6,13 +12,14 @@
     error_reporting(E_ALL);
 
     //INCLUDES
-    require 'dbcred.php';
-    require 'Reg.php';
-    require 'Log.php';
-    require_once 'Doc.php';
-    require 'Files.php';
-    require 'usersettings.php';
-    require '../PDF/pdf.php';
+    include 'dbcred.php';
+    require_once('Reg.php');
+    require_once('Log.php');
+    require_once('Doc.php');
+    require_once('Files.php');
+    require_once('usersettings.php');
+    require_once('../PDF/pdf.php');
+    
 
     //VALUES
     $client_id = (isset($_SESSION['nit']))?$_SESSION['nit']:false;
@@ -31,20 +38,23 @@
     $nombre_folder = (isset($_GET['folderName']))?$_GET['folderName']:false;
     $doc_id = (isset($_GET['docid']))?$_GET['docid']:false;
     $editUserObj = (isset($_POST['obj']))?$_POST['obj']:false;
+    $encVal = (isset($_GET['encVal']))?$_GET['encVal']:false;
 
     //CLASSES CONSTRUCTORS
     $reg = new Reg($db);
     $log = new Log($db);
     $doc = new Doc($db); 
-    $files = new Files();
+    $files = new Files($db);
     $user = new Usettings($db);
+    $nullPDF = new PDF(null,null,null,null);
 
     //REQUESTS
     if($request == 'confi' && $email != false)
     {
+        echo $email;
         if($reg->confirmReg($email))
          {
-            header('Location: http://70.35.196.223/promTest/confirm.php?conf=true&email='.$email);
+            header('Location: '.$siteURI.'/promTest/confirm.php?conf=true&email='.$email);
          }
     }
     if($request == 'regi')
@@ -60,27 +70,29 @@
         $reso = $doc->emprsas();
         echo json_encode($reso->pkg);
     }
-    if($request == 'cert' && $codigoFormato != false && $mesini != false && $mesfin != false)
+    if($request == 'cert' && $codigoFormato != false && $mesini != false && $mesfin != false && $id_empresa != false)
     {
-        echo json_encode($doc->generar_certificado($codigoFormato, $mesini, $mesfin));
+        echo json_encode($doc->generar_certificado($codigoFormato, $mesini, $mesfin, $id_empresa));
     }
     if($request == 'login' && $username != false && $pass != false)
     {
         $log->checkLogIn();
         
         $res = $log->login($username, $pass);
-        if($res === false)
+        if($res == 'success!')
         {
-           echo 'Su correo electronico o contrasena esta incorrecto. Por favor trate denuevo, o si olvido su contrasena recuperela <button style="color:#333;" class="recuPassBtn" type="button">aqui.</button>';
+            echo 1;
+        }else if($res === false)
+        {
+           echo 0;
            
         }else if($res == 'no activo')
         {
-            echo "Al parecer su correo electronico aun no se a confirmado. Por favor revise su correo electronico para activar su cuenta";
+            echo 2;
             
-        }else if($res == true)
-        {
-            echo true;
-        }
+        }else if($res == 'not in db'){
+            echo 3;
+        } 
         
     }
     if($request == 'periodos' && $id_empresa != false && $codigoFormato != false)
@@ -95,19 +107,19 @@
     }
     if($request == 'guardarcert' && isset($_POST['img']) && isset($_POST['formato']) && isset($_POST['mesini']) && isset($_POST['mesfin']))
     {
-       $pdf = new PDF($_POST['formato'],$_POST['mesini'],$_POST['mesfin']);
+       $pdf = new PDF($_POST['formato'],$_POST['mesini'],$_POST['mesfin'], $_POST['nit_empresa']);
        $fname = $_POST['folder'];
        echo $pdf->guardar_en_db($fname);
     }
     if($request == 'files')
     {
-        $pdf = new PDF(null,null,null);
-        echo json_encode($pdf->folder_list());
+        
+        echo json_encode($files->folder_list());
     }
     if($request == 'newFold' && $nombre_folder != false)
     {
-        $pdf = new PDF(null,null,null);
-        echo $pdf->create_folder($nombre_folder);
+        
+        echo $files->create_folder($nombre_folder);
     }
     if($request == 'opendir' && $nombre_folder != false)
     {
@@ -115,14 +127,17 @@
     }
     if($request == 'delfile' && $doc_id != false)
     {
-        $pdf = new PDF(null,null,null);
-        echo $pdf->del_doc($doc_id);
+        
+        echo $files->del_doc($doc_id);
     }
     if($request == 'deldir' && $nombre_folder != false)
     {
-        $pdf = new PDF(null,null,null);
-        echo $pdf->del_folder($nombre_folder);
+        
+        echo $files->del_folder($nombre_folder);
     }
+    
+
+    //USER SETTINGS
     if($request == 'infouser')
     {
         echo json_encode($user->info_usuario());
@@ -138,6 +153,10 @@
         if($newpass == $_POST['newpassconfi']){
             echo $user->cambiar_clave($pass, $newpass);
         }
+    }
+    if($request = 'encrypt' && $encVal != false)
+    {
+        echo $nullPDF->encrypt($encVal);
     }
 
     

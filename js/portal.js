@@ -1,3 +1,11 @@
+/*!
+ * portal.js
+ * Version BETA 
+ * Hans Christian Aranzalez - <haranzalez@gmail.com>
+ */
+
+folder_setup();
+//info_y_contacto_de_empresa();
 //FUNCIONES CORRELATIVAS
 //JQUERY UI
 //toggle function on click jQuery plug in
@@ -15,19 +23,16 @@
     };
 }(jQuery));
 //toggle function on click jQuery plug in
-
+var siteURI = "http://www.sqlprometeo.com/";
 //FUNCIONES UI
-
-
-
 
 //NAVEGACION
 $('.portalNavEmpBtn').on('click', function() {
     var dpb = $(this).attr('data-empresa');
     if (dpb = 'empVinculadas') {
         document.body.style.backgroundColor = '#FFCC66';
-        empresas_vinculadas();
-        $('.logo_corporativo').hide();
+        empresas_vinculadas('cert');
+
         $('.slogan').fadeIn();
         $('.logoPortal').fadeIn();
     }
@@ -37,8 +42,8 @@ $('.portalNavDocBtn').on('click', function() {
     var dpb = $(this).attr('data-empresa');
     if (dpb = 'documents') {
         document.body.style.backgroundColor = '#FFCC66';
-        renderFiles('both');
-        $('.logo_corporativo').hide();
+        open_folder('Bandeja de entrada');
+
         $('.slogan').fadeIn();
         $('.logoPortal').fadeIn();
     }
@@ -47,8 +52,8 @@ $('.folderList').on('click', '.portalNavDocBtn', function() {
     var dpb = $(this).attr('data-empresa');
     if (dpb = 'documents') {
         document.body.style.backgroundColor = '#FFCC66';
-        renderFiles('dash');
-        $('.logo_corporativo').hide();
+        open_folder('Bandeja de entrada');
+
         $('.slogan').fadeIn();
         $('.logoPortal').fadeIn();
     }
@@ -57,14 +62,19 @@ $('.folderList').on('click', '.portalNavDocBtn', function() {
 $('.portalNavCambiarDatosBtn').on('click', function() {
     clearAll();
     datos_usuario();
-    $('.logo_corporativo').hide();
+    $('.slogan').fadeIn();
+    $('.logoPortal').fadeIn();
+});
+$('.portalNavEmpInfoBtn').on('click', function() {
+    clearAll();
+    empresas_vinculadas('infoEmp');
     $('.slogan').fadeIn();
     $('.logoPortal').fadeIn();
 });
 
 $('.fileContainer').on('click', '.newDocumBtn', function() {
     document.body.style.backgroundColor = '#FFCC66';
-    empresas_vinculadas();
+    empresas_vinculadas('cert');
 });
 //NAVEGACION END
 
@@ -79,6 +89,7 @@ $('.dash').on('click', '.perCtner .period', function() {
     $('.generar_certificado_boton .imprimirBtn').attr('data-mesfin', mesfin);
     $('.generar_certificado_boton .guardarBtn').attr('data-mesini', mesini);
     $('.generar_certificado_boton .guardarBtn').attr('data-mesfin', mesfin);
+    $('.selPerMess').hide();
     $('.generar_certificado_boton .imprimirBtn').show();
     $('.generar_certificado_boton .pdfBtn').show();
     $('.generar_certificado_boton .guardarBtn').show();
@@ -97,9 +108,9 @@ $('.dash').on('click', '.formatoCtner .formato', function() {
 
 $('.dash').on('click', '.empBox', function() {
     $('.empresas_contenedor').hide();
-    generar_datos_de_empresa($(this));
-    $('.headerPortal').find('.logoPortal').hide();
-    $('.headerPortal').find('.slogan').hide();
+    generar_datos_de_empresa($(this), 'infoEmp');
+    // $('.headerPortal').find('.logoPortal').hide();
+    // $('.headerPortal').find('.slogan').hide();
 
 });
 
@@ -110,7 +121,8 @@ $(".dash").on('click', '.datos_de_empresa .generar_certificado_boton .imprimirBt
     var formato = $(this).attr('data-codform');
     var mesini = $(this).attr('data-mesini');
     var mesfin = $(this).attr('data-mesfin');
-    generar_certificado(formato, mesini, mesfin);
+    var nit_empresa = $(this).attr('data-nitempresa');
+    generar_certificado(formato, mesini, mesfin, nit_empresa);
 
 });
 
@@ -124,18 +136,18 @@ $('.dash').on('click', '.datos_de_empresa .generar_certificado_boton .guardarBtn
 });
 
 //FUNCIONES MANEJO DE DOCUMENTOS
-$('.fileContainer').button().on("click", '.newFolderBtn', function() {
+$('.folderlist').button().on("click", '.mainFolderFileList .newFolderBtn', function() {
 
-    $('#formDialog form fieldset').html('<p>Porfavor escriba un nombre para su nuevo folder.</p><input type="text" placeholder="Nombre" name="folderName" id="folderName" class="text ui-widget-content ui-corner-all"><input type="submit" tabindex="-1" style="position:absolute; top:-1000px">');
+    $('#formDialog form fieldset').html('<input type="text" placeholder="Escriba nombre" name="folderName" id="folderName" class="text ui-widget-content ui-corner-all"><input type="submit" tabindex="-1" style="position:absolute; top:-1000px">');
     dialog = $("#formDialog").dialog({
         autoOpen: false,
-        height: 180,
+        height: 160,
         width: 350,
         title: 'Nuevo Folder',
         modal: true,
         buttons: {
             "Crear Folder": crearFolder,
-            Cancel: function() {
+            "Cancelar": function() {
                 dialog.dialog("close");
             }
         },
@@ -164,26 +176,26 @@ $('.fileContainer').on('click', '.folderBtn', function() {
 
 $('.fileContainer').on('click', '.delfile', function() {
     var folder = $(this).attr('data-folder');
-
     var docid = $(this).attr('data-docid');
+    console.log(folder);
     del_file(folder, docid);
 });
+
 $('.folderList').on('click', '.toggleFolderListBtn', function() {
     $('.folderList').find('.mainFolderFileList').show();
 });
 
 $('.cambiarDatosFormCtnr').on('click', '.edit', function(e) {
-    e.preventDefault();
     var field = $(this).attr('data-field');
     var col = $(this).attr('data-col');
     var id = $(this).attr('data-cid');
-
-    $('#formDialog form fieldset').html('<p>Cambiar ' + field + '.</p><input type="text" name="' + col + '" class="text ui-widget-content ui-corner-all"><input type="submit" tabindex="-1" style="position:absolute; top:-1000px">');
+    var mess = "<p>Para cambiar su " + field + " entre su nueva informacion en el campo de abajo. Si cambia de opinion, oprima cancelar.</p>";
+    $('#formDialog form fieldset').html('<input placeholder="Escriba nuevo ' + field + '" type="text" name="' + col + '" class="text ui-widget-content ui-corner-all"><input type="submit" tabindex="-1" style="position:absolute; top:-1000px">');
     dialog = $("#formDialog").dialog({
         autoOpen: false,
-        height: 180,
+        height: 160,
         width: 350,
-        title: 'Editar',
+        title: 'Editando ' + field,
         modal: true,
         buttons: {
             "Cambiar": function() {
@@ -192,7 +204,7 @@ $('.cambiarDatosFormCtnr').on('click', '.edit', function(e) {
                 editar_dato_usuario(newd, id);
                 dialog.dialog("close");
             },
-            Cancel: function() {
+            "Cancelar": function() {
                 dialog.dialog("close");
             }
         },
@@ -215,7 +227,7 @@ $('.cambiarDatosFormCtnr').on('click', '.ctn .cambiarClaveBtn', function() {
         '<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">');
     dialog = $("#formDialog").dialog({
         autoOpen: false,
-        height: 240,
+        height: 260,
         width: 350,
         title: 'Cambio de clave',
         modal: true,
@@ -243,9 +255,10 @@ $('.cambiarDatosFormCtnr').on('click', '.ctn .cambiarClaveBtn', function() {
 
 /*************** FUNCIONES **********************/
 //FUNCIONES COMPLEMENTARIAS
-function hexToBase64(str) {
+function hexToBase64(rstr) {
 
-    if (str != false) {
+    if (rstr != false) {
+        var str = escape(rstr);
         return btoa(String.fromCharCode.apply(null, str.replace(/\r|\n/g, "").replace(/([\da-fA-F]{2}) ?/g, "0x$1 ").replace(/ +$/, "").split(" ")));
     } else {
         return 'http://placehold.it/50x50';
@@ -278,14 +291,14 @@ function PrintElem() {
     var mywindow = window.open('', 'PRINT', 'height=' + dimsH + ',width=' + dimsW + ',left=' + x + ',top=' + y);
 
     mywindow.document.write('<html><head><title>PROMETEO - CERTIFICADO</title>');
-    mywindow.document.write('<link rel="stylesheet" href="http://70.35.196.223/promTest/css/certificado.css"><link rel="stylesheet" href="http://70.35.196.223/promTest/css/bootstrap.css"><link rel="stylesheet" href="http://70.35.196.223/promTest/css/font-awesome.css">');
+    mywindow.document.write('<link rel="stylesheet" href="' + siteURI + 'css/certificado.css"><link rel="stylesheet" href="' + siteURI + 'css/bootstrap.css"><link rel="stylesheet" href="' + siteURI + '/promTest/css/font-awesome.css">');
     mywindow.document.write('</head><body>');
     mywindow.document.write(elem.innerHTML);
-    mywindow.document.write('<script src="http://70.35.196.223/promTest/js/jquery-3.2.1.js"><\/script>' +
-        '<script src="http://70.35.196.223/promTest/js/bootstrap.js"><\/script>' +
-        '<script src="http://70.35.196.223/promTest/js/jspdf.js"><\/script>' +
-        '<script src="http://70.35.196.223/promTest/js/html2canvas.js"><\/script>' +
-        '<script src="http://70.35.196.223/promTest/js/main.js?newversion"><\/script>');
+    mywindow.document.write('<script src="' + siteURI + 'js/jquery-3.2.1.js"><\/script>' +
+        '<script src="' + siteURI + 'js/bootstrap.js"><\/script>' +
+        '<script src="' + siteURI + 'js/jspdf.js"><\/script>' +
+        '<script src="' + siteURI + 'js/html2canvas.js"><\/script>' +
+        '<script src="' + siteURI + 'js/main.js?newversion"><\/script>');
     mywindow.document.write('</body></html>');
 
 
@@ -299,8 +312,9 @@ function PrintElem() {
 }
 
 function clearAll() {
-    $('.datos_empresa_contenedor').remove();
+    $('.empresas_vinculadas_ctnr').remove();
     $('.empresas_contenedor .row').remove();
+    $('.fileContainer').hide();
     $('.fileContainer div').remove();
     $('.fileContainer h4').remove();
     $('.fileContainer .filesBtnContainer').remove();
@@ -310,8 +324,25 @@ function clearAll() {
 
 }
 
+function encrypt(val) {
+    $.ajax({
+        async: true,
+        type: "get",
+        url: "src/controler.php?req=encrypt&encVal=" + val,
+        success: function(res) {
+            return res.toString();
+        }
+    });
+}
+
 //FUNCIONES AJAX
-function empresas_vinculadas() {
+function empresas_vinculadas(type) {
+
+    if (type == 'cert') {
+        $('.dash .empresas_contenedor .secTitle').text('Seleccione un empresa para empezar');
+    } else if (type == 'infoEmp') {
+        $('.dash .empresas_contenedor .secTitle').text('Empresas vinculadas');
+    }
     $('.loadingCtn').show();
     clearAll();
     $.ajax({
@@ -320,24 +351,31 @@ function empresas_vinculadas() {
         url: "src/controler.php?req=empvin",
         success: function(res) {
             $(".portalNavBtn[data-nav=1]").focus();
-
+            console.log(res);
             var d = JSON.parse(res);
-
+            console.log(d);
             if (d.length > 0) {
                 for (var i = 0; i < d.length; i++) {
-
+                    console.log(d[i]);
                     var img = 'data:image/jpeg;base64,' + hexToBase64(d[i].lgtpo_emprsa);
                     var html = '<div class="row">' +
-                        '<div class="col-md-12 empBox borde_radio_3px"><div class="row">' +
+                        '<div class="col-md-12 empBox " data-infoType="' + type + '"><div class="row">' +
                         '<div class="col-md-1"><img src="' + img + '"></div><div class="col-md-11"><p class="nitEmp" data-razonSocial="' + d[i].nmbre_rzon_scial + '" data-nit="' + d[i].id_emprsa + '" data-color="' + d[i].cdgo_color + '"><b>' + d[i].nmbre_rzon_scial + '</b>' +
                         ' | NIT: ' + d[i].id_emprsa.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + ' | ' + d[i].drccion + ', ' + d[i].nmbre_mncpio + ', ' + d[i].nmbre_pais + ' | ' + d[i].web_site + '</p></div>' +
 
                         '</div>' +
+                        '<input type="hidden" class="nit_empresa" value="' + d[i].id_emprsa + '">' +
                         '<input type="hidden" class="dirEmpresa" value="' + d[i].drccion + '">' +
                         '<input type="hidden" class="paisEmpresa" value="' + d[i].nmbre_pais + '">' +
+                        '<input type="hidden" class="depEmpresa" value="' + d[i].nmbre_dpto + '">' +
                         '<input type="hidden" class="municipioEmpresa" value="' + d[i].nmbre_mncpio + '">' +
+                        '<input type="hidden" class="contEmpresa" value="' + d[i].nmbre_cntcto + '">' +
+                        '<input type="hidden" class="telEmpresa" value="' + d[i].tlfno_fjo + '">' +
+                        '<input type="hidden" class="mobilEmpresa" value="' + d[i].tlfno_mvil + '">' +
                         '<input type="hidden" class="webEmpresa" value="' + d[i].web_site + '">' +
                         '<input type="hidden" class="logo_empresa" value="' + d[i].lgtpo_emprsa + '">' +
+                        '<input type="hidden" class="emContEmpresa" value="' + d[i].email_cntcto + '">' +
+
                         '</div>' +
                         '</div>';
 
@@ -349,6 +387,13 @@ function empresas_vinculadas() {
                 }
                 $('.empresas_contenedor').fadeIn();
                 $('.loadingCtn').fadeOut();
+            } else {
+                var html = '<div class="row">' +
+                    '<div class="col-md-12 empBox "><p style="font-size:15;text-align:center;"><i class="fa fa-times" aria-hidden="true"></i>  No hay empresas vinculadas.</p></div></div>';
+                $('.logoPortal').attr('src', 'img/logo_ppal.png');
+                $('.empresas_contenedor .empRowCtnr').append(html);
+                $('.empresas_contenedor').fadeIn();
+                $('.loadingCtn').fadeOut();
             }
         }
     });
@@ -357,90 +402,239 @@ function empresas_vinculadas() {
 
 function generar_datos_de_empresa(el) {
     $('.empresas_contenedor').fadeOut();
-    $('.datos_empresa_contenedor').remove();
 
+    $('.datos_empresa_contenedor').remove();
     var color = $(el).find('p').attr('data-color');
     var colorFinal = color.slice(0, -3);
     var imgData = $(el).find('.logo_empresa').val();
     var img = 'data:image/jpeg;base64,' + hexToBase64(imgData);
+    var type = $(el).attr('data-infoType');
     document.body.style.backgroundColor = colorFinal;
-    $('.logo_corporativo').html('<img style="width:100px;" src="' + img + '"></div>');
-    console.log($(el).find('.nitEmp').attr('data-razonSocial'));
-    var html = '<div class="datos_empresa_contenedor">' +
-        '<h4 style="color:#ccc;">Datos de empresa</h4>' +
-        '<div class="datos_de_empresa">' +
-        '<div class="datosEmpresa borde_radio_3px" style="padding:5px 5px !important;">' +
-        '<div class="row">' +
-        '<div class="col-md-6">' +
-        '<div class="row">' +
-        '<div class="col-md-3"><strong>Razon Social:</strong></div>' +
-        '<div class="col-md-9 nombre_empresa"> ' + $(el).find('.nitEmp').attr('data-razonSocial').replace(/\w\S*/g, function(txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); }) + '</div>' +
-        '</div>' +
-        '<div class="row">' +
-        '<div class="col-md-3"><strong>NIT:</strong></div>' +
-        '<div class="col-md-9 nit_empresa">' + $(el).find('.nitEmp').attr('data-nit').toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + '</div>' +
-        '</div>' +
-        '</div>' +
-        '<div class="col-md-6">' +
-        '<div class="row">' +
-        '<div class="col-md-3"><strong>Direccion:</strong></div>' +
-        '<div class="col-md-9 direccion_empresa">' + $(el).find('.dirEmpresa').val() + '</div>' +
-        '</div>' +
-        '<div class="row">' +
-        '<div class="col-md-3"><strong>Sition Web:</strong></div>' +
-        '<div class="col-md-9 web_site"><a href="http://' + $(el).find('.webEmpresa').val() + '">' + $(el).find('.webEmpresa').val() + '</a></div>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '<div class="row formato_periodo_empresa">' +
-        '<div class="col-md-6">' +
-        '<h4 style="color:#ccc;">Formatos</h4>' +
-        '<div class="formatoCtner borde_radio_3px"></div>' +
-        '</div>' +
-        '<div class="col-md-6">' +
-        '<h4 style="color:#ccc;">Periodos</h4>' +
-        '<div class="perCtner borde_radio_3px"></div>' +
-        '</div>' +
-        '</div>' +
-        '<div class="generar_certificado_boton">' +
-        '<h4 style="color:#ccc;text-align:center;">Generar Certificado</h4>' +
-        '<div class="row" style="width:25%;margin:auto !important;">' +
-        '<div class="col-md-4" >' +
-        '<div style="text-align:center;width:95%;">' +
-        '<button type="button" class="imprimirBtn borde_radio_3px"><i class="glyphicon glyphicon-print"></i></button>' +
-        '</div>' +
+    console.log(el);
+    if (type == 'cert') {
 
-        '</div>' +
-        '<div class="col-md-4" >' +
-        '<div style="text-align:center;">' +
-        '<form id="pdfFrm" target="_blank" action="PDF/pdfout.php" method="post">' +
-        '<button type="submit" title="PDF" class="pdfBtn borde_radio_3px"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></button>' +
-        '<input type="hidden" name="img" value="' + hexToBase64(imgData) + '">' +
-        '<input type="hidden" name="formato" value="">' +
-        '<input type="hidden" name="mesini" value="">' +
-        '<input type="hidden" name="mesfin" value="">' +
-        '</form>' +
-        '</div>' +
-        '</div>' +
-        '<div class="col-md-4">' +
-        '<div style="text-align:center;width:95%;">' +
-        '<form id="saveFrm" method="post">' +
-        '<button type="button" title="Guardar" class="guardarBtn borde_radio_3px"><i class="glyphicon glyphicon-floppy-disk"></i></button>' +
-        '<input type="hidden" name="img" value="' + hexToBase64(imgData) + '">' +
-        '<input type="hidden" name="formato" value="">' +
-        '<input type="hidden" name="mesini" value="">' +
-        '<input type="hidden" name="mesfin" value="">' +
-        '</form>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>';
+        var html = '<div style="padding-top:20px !important;width:95%;margin:auto !important;" class="row empresas_vinculadas_ctnr"><div class="col-md-6">' +
+            '<div class="logoEmpCtnr">' +
+            '<span style="display: inline-block;height: 100%;vertical-align: middle;"></span><img style="width:100px;" src="' + img + '">' +
+            '</div>' +
+            '</div>' +
+
+            '<div class="col-md-6">' +
+            '<div class="datos_empresa_contenedor">' +
+
+            '<div class="datos_de_empresa">' +
+
+            '<div class="datosEmpresa">' +
+            '<h4 class="secH4">Datos de empresa</h4>' +
+            '<div class="row secTbl">' +
+            '<div class="col-md-12">' +
+            '<div class="row">' +
+            '<div class="col-md-6"><strong>Razón Social:</strong></div>' +
+            '<div class="col-md-6 nombre_empresa"> ' + $(el).find('.nitEmp').attr('data-razonSocial').replace(/\w\S*/g, function(txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); }) + '</div>' +
+            '</div>' +
+            '<div class="row">' +
+            '<div class="col-md-6"><strong>NIT:</strong></div>' +
+            '<div class="col-md-6 nit_empresa">' + $(el).find('.nitEmp').attr('data-nit').toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + '</div>' +
+            '</div>' +
+            '<div class="row">' +
+            '<div class="col-md-6"><strong>Dirección:</strong></div>' +
+            '<div class="col-md-6 direccion_empresa">' + $(el).find('.dirEmpresa').val() + '</div>' +
+            '</div>' +
+            '<div class="row">' +
+            '<div class="col-md-6"><strong>Sition Web:</strong></div>' +
+            '<div class="col-md-6 web_site"><a href="http://' + $(el).find('.webEmpresa').val() + '">' + $(el).find('.webEmpresa').val() + '</a></div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+
+            '<div class="row formato_periodo_empresa">' +
+            '<div class="col-md-12 ">' +
+            '<div class="formatoPerTbl">' +
+            '<h4 class="secH4">Formatos disponibles</h4>' +
+            '<div class="formatoCtner"></div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="col-md-12">' +
+            '<div class="formatoPerTbl">' +
+            '<h4 class="secH4">Períodos disponibles</h4>' +
+            '<div class="perCtner"><div class="selFormatoMess"><i class="fa fa-warning" aria-hidden="true"></i> Seleccione formato</div></div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+
+            '<div class="generar_certificado_boton">' +
+            '<h4 style="color:#ccc;text-align:center;">Generar Certificado</h4>' +
+            '<div class="selPerMess"><i class="fa fa-warning" aria-hidden="true"></i> Seleccione periodo</div>' +
+            '<div class="row" style="width:25%;margin:auto !important;">' +
+
+            '<div class="col-md-6" >' +
+            '<div style="text-align:center;">' +
+            '<form id="pdfFrm" target="_blank" action="PDF/pdfout.php" method="post">' +
+            '<button type="submit" title="PDF" class="pdfBtn"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></button>' +
+            '<input type="hidden" name="img" value="' + hexToBase64(imgData) + '">' +
+            '<input type="hidden" name="formato" value="">' +
+            '<input type="hidden" name="mesini" value="">' +
+            '<input type="hidden" name="mesfin" value="">' +
+            '<input type="hidden" name="nit_empresa" value="' + $(el).find('.nit_empresa').val() + '">' +
+            '</form>' +
+            '</div>' +
+            '</div>' +
+
+            '<div class="col-md-6">' +
+            '<div style="text-align:center;width:95%;">' +
+            '<form id="saveFrm" method="post">' +
+            '<button type="button" title="Guardar" class="guardarBtn"><i class="glyphicon glyphicon-floppy-disk"></i></button>' +
+            '<input type="hidden" name="img" value="' + hexToBase64(imgData) + '">' +
+            '<input type="hidden" name="formato" value="">' +
+            '<input type="hidden" name="mesini" value="">' +
+            '<input type="hidden" name="mesfin" value="">' +
+            '<input type="hidden" name="nit_empresa" value="' + $(el).find('.nit_empresa').val() + '">' +
+            '</form>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div></div>';
+    } else if (type == 'infoEmp') {
+        var html = '<div style="padding-top:20px !important;width:95%;margin:auto !important;" class="row empresas_vinculadas_ctnr">' +
+            '<div class="row">' +
+
+            '<div class="col-md-6">' +
+            '<div class="logoEmpCtnr">' +
+            '<span style="display: inline-block;height: 100%;vertical-align: middle;"></span><img style="width:100px;" src="' + img + '">' +
+            '</div>' +
+            '</div>' +
+
+            '<div class="col-md-6">' +
+            '<div class="datos_empresa_contenedor">' +
+            '<div class="datosEmpresa">' +
+            '<h4 class="secH4">Datos Empresa</h4>' +
+
+            '<div class="row">' +
+            '<div class="col-md-4">' +
+            '<p><b>Nombre razón social</b></p>' +
+            '</div>' +
+            '<div class="col-md-8">' +
+            '<p>' + $(el).find('.nitEmp').attr('data-razonSocial').replace(/\w\S*/g, function(txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); }) + '</p>' +
+            '</div>' +
+            '</div>' +
+
+            '<div class="row">' +
+            '<div class="col-md-4">' +
+            '<p><b>NIT</b></p>' +
+            '</div>' +
+            '<div class="col-md-8">' +
+            '<p>' + $(el).find('.nitEmp').attr('data-nit').toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + '</p>' +
+            '</div>' +
+            '</div>' +
+
+            '<div class="row">' +
+            '<div class="col-md-4">' +
+            '<p><b>Dirección</b></p>' +
+            '</div>' +
+            '<div class="col-md-8">' +
+            '<p>' + $(el).find('.dirEmpresa').val() + '</p>' +
+            '</div>' +
+            '</div>' +
+
+            '<div class="row">' +
+            '<div class="col-md-4">' +
+            '<p><b>Ciudad</b></p>' +
+            '</div>' +
+            '<div class="col-md-8">' +
+            '<p>' + $(el).find('.municipioEmpresa').val() + '</p>' +
+            '</div>' +
+            '</div>' +
+
+            '<div class="row">' +
+            '<div class="col-md-4">' +
+            '<p><b>Departamento</b></p>' +
+            '</div>' +
+            '<div class="col-md-8">' +
+            '<p>' + $(el).find('.depEmpresa').val() + '</p>' +
+            '</div>' +
+            '</div>' +
+
+            '<div class="row">' +
+            '<div class="col-md-4">' +
+            '<p><b>País</b></p>' +
+            '</div>' +
+            '<div class="col-md-8">' +
+            '<p>' + $(el).find('.paisEmpresa').val() + '</p>' +
+            '</div>' +
+            '</div>' +
+
+            '<div class="row">' +
+            '<div class="col-md-4">' +
+            '<p><b>Web Site</b></p>' +
+            '</div>' +
+            '<div class="col-md-8">' +
+            '<p><a href="http://' + $(el).find('.webEmpresa').val() + '" target="blank">' + $(el).find('.webEmpresa').val() + '</a></p>' +
+            '</div>' +
+            '</div>' +
+
+            '</div>' +
+
+            '</div>' +
+
+            '<div class="datos_empresa_contenedor">' +
+            '<div class="datosEmpresa">' +
+            '<h4 class="secH4">Contacto</h4>' +
+
+            '<div class="row">' +
+            '<div class="col-md-4">' +
+            '<p><b>Nombre Contacto</b></p>' +
+            '</div>' +
+            '<div class="col-md-8">' +
+            '<p>' + $(el).find('.contEmpresa').val().replace(/\w\S*/g, function(txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); }) + '</p>' +
+            '</div>' +
+            '</div>' +
+
+            '<div class="row">' +
+            '<div class="col-md-4">' +
+            '<p><b>Teléfono Fijo</b></p>' +
+            '</div>' +
+            '<div class="col-md-8">' +
+            '<p>' + $(el).find('.telEmpresa').val() + '</p>' +
+            '</div>' +
+            '</div>' +
+
+            '<div class="row">' +
+            '<div class="col-md-4">' +
+            '<p><b>Teléfono Móvil</b></p>' +
+            '</div>' +
+            '<div class="col-md-8">' +
+            '<p>' + $(el).find('.mobilEmpresa').val() + '</p>' +
+            '</div>' +
+            '</div>' +
+
+            '<div class="row">' +
+            '<div class="col-md-4">' +
+            '<p><b>Email</b></p>' +
+            '</div>' +
+            '<div class="col-md-8">' +
+            '<p><a href="mailto:' + $(el).find('.emContEmpresa').val() + '">' + $(el).find('.emContEmpresa').val() + '</a></p>' +
+            '</div>' +
+            '</div>' +
+
+            '</div>' +
+
+            '</div>' +
+
+            '</div>' +
+
+
+
+            '</div></div>';
+    }
+
+
 
     $('.dash').append(html);
-    $('.logo_corporativo').fadeIn();
     formatos($(el).find('.nitEmp').attr('data-nit'));
 
 }
@@ -448,18 +642,21 @@ function generar_datos_de_empresa(el) {
 function periodos(id_emp, codigo_formato) {
     $('.loadingCtn').show();
     $('.perCtner .row').remove();
+    $('.selFormatoMess').hide();
+
     $.ajax({
         async: true,
         type: "get",
         url: "src/controler.php?req=periodos&idemp=" + id_emp + "&codform=" + codigo_formato,
         success: function(res) {
             var d = JSON.parse(res);
+
             for (var i = 0; i < d.length; i++) {
                 $('.generar_certificado_boton #pdfFrm input[name=mesini]').val(d[i].ano_mes_incial);
                 $('.generar_certificado_boton #pdfFrm input[name=mesfin]').val(d[i].ano_mes_fnal);
                 $('.generar_certificado_boton #saveFrm input[name=mesini]').val(d[i].ano_mes_incial);
                 $('.generar_certificado_boton #saveFrm input[name=mesfin]').val(d[i].ano_mes_fnal);
-                var htmlPeriodos = '<a href="#" style="display:block;padding:5px !important;font-size:8pt !important;width:100%;" class="row period">' +
+                var htmlPeriodos = '<a href="#" class="row period">' +
                     '<div class="col-md-5 mes_inicial">' + d[i].ano_mes_incial + '</div>' +
                     '<div class="col-md-5 mes_final">' + d[i].ano_mes_fnal + '</div>' +
                     '<div class="col-md-2"><i style="float:right;display:none;" class="formIcon glyphicon glyphicon-ok"></i></div>' +
@@ -482,7 +679,7 @@ function formatos(id_emp) {
         success: function(res) {
             var d = JSON.parse(res);
             for (var i = 0; i < d.length; i++) {
-                var html = '<a href="#" style="display:block;padding:5px !important;font-size:8pt !important;width:100%;" class="formato" data-codigoFormato="' + d[i].cdgo_frmto + '" data-idemp="' + d[i].id_emprsa + '">' + d[i].nmbre_frmto + ' <i style="float:right;display:none;" class="formIcon glyphicon glyphicon-ok"></i></a>';
+                var html = '<a href="#" class="formato" data-codigoFormato="' + d[i].cdgo_frmto + '" data-idemp="' + d[i].id_emprsa + '">' + d[i].nmbre_frmto + ' <i style="float:right;display:none;" class="formIcon glyphicon glyphicon-ok"></i></a>';
                 $('.formatoCtner').append(html);
                 $('.generar_certificado_boton #pdfFrm input[name=formato]').val(d[i].cdgo_frmto);
                 $('.generar_certificado_boton #saveFrm input[name=formato]').val(d[i].cdgo_frmto);
@@ -493,11 +690,11 @@ function formatos(id_emp) {
     });
 }
 
-function generar_certificado(formato, mesini, mesfin) {
+function generar_certificado(formato, mesini, mesfin, nit_empresa) {
     $.ajax({
         async: true,
         type: "get",
-        url: "src/controler.php?req=cert&codform=" + formato + "&mesini=" + mesini + "&mesfin=" + mesfin,
+        url: "src/controler.php?req=cert&codform=" + formato + "&mesini=" + mesini + "&mesfin=" + mesfin + "&idemp=" + nit_empresa,
         success: function(res) {
 
             if (res != 'false') {
@@ -512,7 +709,7 @@ function generar_certificado(formato, mesini, mesfin) {
                 }
 
                 $('.logo_certificado').attr('src', img);
-                $('.certificado_nombre_empresa').text(d[0].nmbre_rzon_scial);
+                $('.certificado_nombre_empresa').text(d[0].nmbre_trcro);
                 $('.certificado_nit_empresa').text(d[0].id_emprsa.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
                 $('.certificado_direccion_empresa').text(d[0].drccion);
                 $('.certificado_ciudad_empresa').text(d[0].nmbre_mncpio + ', ' + d[0].nmbre_pais);
@@ -563,16 +760,16 @@ function guardar_certificado() {
         type: "get",
         url: "src/controler.php?req=files",
         success: function(res) {
-            console.log(res);
+
             var d = JSON.parse(res);
             console.log(d);
-            var html = '<p>Porfavor seleccione un folder para guardar certificado.</p><select name="folderList" form="carform"><option value="Bandeja de entrada">Bandeja de entrada</option>';
+            var html = '<p>Porfavor seleccione un folder para guardar certificado.</p><select name="folderList" form="carform">';
             $('.file').remove();
-            for (var key in d['Bandeja de entrada']) {
+            for (var key in d) {
                 var last4 = key.substr(key.length - 4);
-                console.log(key);
+
                 if (last4.charAt(0) != '.') {
-                    html = html + '<option value="' + key + '"><i class="fa fa-folder"></i>' + key + '</option>';
+                    html = html + '<option value="' + d[key]['folder_number'] + '"><i class="fa fa-folder"></i>' + key + '</option>';
                 } else {
                     console.log(key);
                 }
@@ -612,13 +809,14 @@ function guardar_certificado() {
         var data = $('#saveFrm').serialize();
         var iconStyle = 'font-size:18pt;color:green;float:left;';
         var f = dialog.find('form').find('select').val();
+        console.log(f);
         $.ajax({
             async: true,
             type: "post",
             data: data + "&folder=" + f,
             url: "src/controler.php?req=guardarcert",
             success: function(res) {
-                renderFiles('cp');
+                open_folder('Bandeja de entrada');
                 dialog.dialog("close");
                 $('#dialog-message').html('<spam style="' + iconStyle + '" class="fa fa-thumbs-up" aria-hidden="true"></spam><p class="dialog_mess"> Su certificado: ' + res +
                     ' se ah guardado exitosamente!</p>');
@@ -639,8 +837,15 @@ function guardar_certificado() {
 //FUNCIONES MANEJO DE DOCUMENTOS
 var doc_data = '';
 
+
+
+
+
+
+
+
 function renderFiles(elm) {
-    if (elm == 'both') {
+    if (elm == 'cp') {
         $('.loadingCtn').show();
         clearAll();
         $('.folderList li').remove();
@@ -650,153 +855,69 @@ function renderFiles(elm) {
             url: "src/controler.php?req=files",
             success: function(res) {
                 var d = JSON.parse(res);
-                doc_data = d;
-                var styleDocTile = 'border-radius:3px;background-color:rgba(3,3,3,.5);padding:20px;font-size:8pt;height:130px;box-shadow:0px 0px 5px #ccc;';
-                var html = '<h4>Bandeja de entrada</h4><div class="row">';
-                var html2 = '<li style="color:#ccc;"><a href="#" class="portalNavDocBtn toggleFolderListBtn" data-empresa="documents"><i style="font-size:12pt;" class="fa fa-folder"  aria-hidden="true"></i>  Bandeja de entrada</a></li><li class="mainFolderFileList"><ul>';
-                var flistStyle = '';
-                var folder = '';
-                if (d['nofiles']) {
-                    html = html + '<p>' + d['nofiles'] + '</p>';
-                } else {
-                    var linksUrl = 'http://70.35.196.223/promTest/PDF/pdfout.php';
-                    //html = html+'<ul class="fileList">';
-
-                    for (var key in d['Bandeja de entrada']) {
-
-                        var last4 = key.substr(key.length - 4);
-                        if (last4.charAt(0) == '.') {
-
-                            //Manipulando texto
-                            var dot = key.split('.');
-                            var final = dot[0].split('_');
-                            var linkText = final[0] + '_' + final[1] + '.pdf';
-
-                            //Agregando elemento
-                            html = html + '<div class="col-md-12 docRow"><div  class="docRowInnerCtnr"><i title="Borrar Documento" class="fa fa-trash delfile" data-docid="' + d['Bandeja de entrada'][key] + '" aria-hidden="true" ></i><a style="color:#333;font-size:7pt !important;" target="blank" href="' + linksUrl + '?docid=' + d['Bandeja de entrada'][key] + '"><i style="font-size:15pt;color:darkred;" class="fa fa-file-pdf-o" aria-hidden="true"></i>       ' + linkText + '</a></div></div>';
-
-                        } else {
-
-                            html = html + '<div class="col-md-12 docRow"><div  class="docRowInnerCtnr"><i title="Borrar Documento" class="fa fa-trash delfile" data-folder="' + key + '" aria-hidden="true" ></i><a class="folderBtn" href="#" data-folder="' + key + '" style="' + flistStyle + '"><i style="font-size:15pt;color:#FDB813;" class="fa fa-folder" aria-hidden="true"></i>       ' + key + '</a></div></div>'
-                            html2 = html2 + '<li><a class="folderBtn" href="#" data-folder="' + key + '" style="' + flistStyle + '"><i style="font-size:9pt;" class="fa fa-folder-o" aria-hidden="true"></i>  ' + key + '</a></li>';
-
-                        }
-
-                    }
-
-                    html = html + '</div>';
-                    html2 = html2 + '</ul></li>';
-                }
-                $('.fileContainer').append('<div class="fileContrBtns"><button type="button" class="newFolderBtn"><i style="position:absolute;top:3;right:2;" class="fa fa-plus" aria-hidden="true"></i><i style="font-size:10px;" class="fa fa-folder" aria-hidden="true"></i></button>' +
-                    '<button type="button" class="newDocumBtn"><i style="position:absolute;top:3;right:2;" class="fa fa-plus" aria-hidden="true"></i><i style="font-size:10px;" class="fa fa-file" aria-hidden="true"></i></button></div>');
-                $('.fileContainer').append(html);
-                $('.folderList').append(html2);
-                $('.fileContainer').fadeIn();
-                $('.loadingCtn').fadeOut();
-            }
-        });
-    } else if (elm == 'cp') {
-        $('.loadingCtn').show();
-        clearAll();
-        $('.folderList li').remove();
-        $.ajax({
-            async: true,
-            type: "get",
-            url: "src/controler.php?req=files",
-            success: function(res) {
-                var d = JSON.parse(res);
-                doc_data = d;
+                //doc_data = d;
                 var styleDocTile = 'border-radius:3px;background-color:rgba(3,3,3,.5);padding:20px;font-size:8pt;height:130px;box-shadow:0px 0px 5px #ccc;';
                 var styleDocCols = 'color:white;text-align:center;padding:6px !important;position:relative !important;';
 
-                var html2 = '<li style="color:#ccc;"><a href="#" class="portalNavDocBtn toggleFolderListBtn" data-empresa="documents"><i style="font-size:12pt;" class="fa fa-folder"  aria-hidden="true"></i>  Bandeja de entrada</a></li><li class="mainFolderFileList"><ul>';
+                var html2 = '<li class="mainFolderFileList"><ul>';
                 var flistStyle = '';
                 var folder = '';
                 if (d['nofiles']) {
                     html2 = html2 + '<li>' + d['nofiles'] + '</li>';
                 } else {
-                    var linksUrl = 'http://70.35.196.223/promTest/PDF/pdfout.php';
+                    var linksUrl = siteURI + 'PDF/pdfout.php';
                     //html = html+'<ul class="fileList">';
 
-                    for (var key in d['Bandeja de entrada']) {
-
-                        var last4 = key.substr(key.length - 4);
-                        if (last4.charAt(0) == '.') {
-                            continue;
-                        } else {
-
-                            html2 = html2 + '<li><a class="folderBtn" href="#" data-folder="' + key + '" style="' + flistStyle + '"><i style="font-size:9pt;" class="fa fa-folder-o" aria-hidden="true"></i>  ' + key + '</a></li>';
-
-                        }
-
+                    for (var key in d) {
+                        html2 = html2 + '<li><a class="folderBtn" href="#" data-folder="' + key + '" style="' + flistStyle + '"><i style="font-size:9pt;" class="fa fa-folder-o" aria-hidden="true"></i>  ' + key + '</a></li>';
                     }
-                    html2 = html2 + '</ul></li>';
+                    html2 = html2 + '</ul><button class="newFolderBtn">Crear Folder</button></li>';
                 }
                 $('.folderList').append(html2);
                 $('.loadingCtn').fadeOut();
             }
         });
-    } else if ((elm == 'dash')) {
-        $('.loadingCtn').show();
-        clearAll();
-        $.ajax({
-            async: true,
-            type: "get",
-            url: "src/controler.php?req=files",
-            success: function(res) {
-                var d = JSON.parse(res);
-                doc_data = d;
-
-                var html = '<h4>Bandeja de entrada</h4><div class="row">';
-
-                var flistStyle = '';
-                var folder = '';
-                if (d['nofiles']) {
-                    html = html + '<p>' + d['nofiles'] + '</p>';
-                } else {
-                    var linksUrl = 'http://70.35.196.223/promTest/PDF/pdfout.php';
-                    //html = html+'<ul class="fileList">';
-
-                    for (var key in d['Bandeja de entrada']) {
-
-                        var last4 = key.substr(key.length - 4);
-                        if (last4.charAt(0) == '.') {
-
-                            //Manipulando texto
-                            var dot = key.split('.');
-                            var final = dot[0].split('_');
-                            var linkText = final[0] + '_' + final[1] + '.pdf';
-
-                            //Agregando elemento
-                            html = html + '<div class="col-md-12 docRow"><div class="docRowInnerCtnr"><i title="Borrar Documento" class="fa fa-trash delfile" data-docid="' + d['Bandeja de entrada'][key] + '" aria-hidden="true" ></i><a target="blank" href="' + linksUrl + '?docid=' + d['Bandeja de entrada'][key] + '"><i style="font-size:15pt;color:darkred;" class="fa fa-file-pdf-o" aria-hidden="true"></i>        ' + linkText + '</a></div></div>';
-
-                        } else {
-
-                            html = html + '<div class="col-md-12 docRow" ><div  class="docRowInnerCtnr"><i title="Borrar Documento" class="fa fa-trash delfile" data-folder="' + key + '" aria-hidden="true" ></i><a class="folderBtn" href="#" data-folder="' + key + '" style="' + flistStyle + '"><i style="font-size:15pt;color:#FDB813;" class="fa fa-folder" aria-hidden="true"></i>        ' + key + '</a></div></div>'
-
-
-                        }
-
-                    }
-
-                    html = html + '</div>';
-
-                }
-                $('.fileContainer').append('<div class="fileContrBtns"><button type="button" class="newFolderBtn"><i style="position:absolute;top:3;right:2;" class="fa fa-plus" aria-hidden="true"></i><i  class="fa fa-folder" aria-hidden="true"></i></button>' +
-                    '<button type="button" class="newDocumBtn"><i style="position:absolute;top:3;right:2;" class="fa fa-plus" aria-hidden="true"></i><i class="fa fa-file" aria-hidden="true"></i></button></div>');
-                $('.fileContainer').append(html);
-
-                $('.fileContainer').fadeIn();
-                $('.loadingCtn').fadeOut();
-            }
-        });
-
     }
 
 }
 
+function folder_setup() {
+    $.ajax({
+        async: true,
+        type: "get",
+        url: "src/controler.php?req=files",
+        success: function(res) {
+            var d = JSON.parse(res);
+            var objSize = Object.keys(d).length;
+            var objKeys = Object.keys(d);
+            console.log(objSize);
+            if (objSize > 0 && objKeys[0] == 'Bandeja de entrada') {
+                renderFiles('cp');
+                open_folder(objKeys[0]);
+            } else {
+                $.ajax({
+                    async: true,
+                    type: 'get',
+                    url: 'src/controler.php?req=newFold&folderName=Bandeja de entrada',
+                    success: function(res) {
+                        console.log(res);
+                        if (res == true) {
+                            renderFiles('cp');
+                            open_folder('Bandeja de entrada');
+                        } else {
+                            console.log('FALSE');
+                        }
+                    }
+                });
+            }
+        }
+    });
+}
+
 function crearFolder() {
     var data = dialog.find("form").serialize();
+    var iconStyle = 'font-size:25pt;color:darkred;float:left;';
+    console.log(data);
     $.ajax({
         async: true,
         type: 'get',
@@ -804,9 +925,19 @@ function crearFolder() {
         success: function(res) {
             if (res == 1) {
                 dialog.dialog("close");
-                renderFiles('both');
+                renderFiles('cp');
+                open_folder('Bandeja de entrada');
             } else {
-                console.log('folder ya existe');
+                $('#dialog-message').html('<spam style="' + iconStyle + '" class="fa fa-times-circle-o" aria-hidden="true"></spam><p class="dialog_mess">Folder ya existe.</p>');
+                $("#dialog-message").dialog({
+                    modal: true,
+                    title: 'Atencion',
+                    buttons: {
+                        Ok: function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
             }
         }
     });
@@ -815,34 +946,82 @@ function crearFolder() {
 function open_folder(folder) {
 
     clearAll();
-    var linksUrl = 'http://70.35.196.223/promTest/PDF/pdfout.php';
+    var linksUrl = siteURI + 'PDF/pdfout.php';
     var styleDocTile = 'border-radius:3px;background-color:rgba(3,3,3,.5);padding:20px;font-size:8pt;height:130px;box-shadow:0px 0px 5px #000;';
     var styleDocCols = 'color:white;text-align:center;padding:6px !important;position:relative !important;';
-    var html = '<div class="row"><h2 style="color:#ccc;">' + folder + '</h2>';
-    var arr = [];
-    for (var key in doc_data['Bandeja de entrada'][folder]) {
+    var html = '<h4><i class="fa fa-folder-open" aria-hidden="true"></i>   ' + folder + '</h4><div class="row">';
+    html = html + '<div class="row docRowHeaders">' +
+        '<div class="col-md-1"><p><b>Doc ID</b></p></div>' +
 
-        //Manipulando texto
-        var newstr = doc_data['Bandeja de entrada'][folder][key].split('-');
-        var dot = newstr[0].split('.');
-        var final = dot[0].split('_');
-        var linkText = final[0] + '_' + final[1] + '.pdf';
+        '<div class="col-md-9 ">' +
+        '<div  >' +
+        '<p><b>Asunto</b></p>' +
+        '</div>' +
+        '</div>' +
 
-        //Agregando Elemento
-        html = html + '<div class="col-md-2" style="' + styleDocCols + '"><div style="position:relative;padding:20px 0px !important;"><i title="Borrar Documento" class="fa fa-trash delfile"  data-docid="' + newstr[1] + '" aria-hidden="true" ></i><a style="color:#333;font-size:7pt !important;" target="blank" href="' + linksUrl + '?docid=' + newstr[1] + '"><i style="font-size:15pt;color:darkred;" class="fa fa-file-pdf-o" aria-hidden="true"></i><br/>' + linkText + '</a></div></div>';
+        '<div class="col-md-1"><p><b>Fecha</b></p></div>' +
 
-    }
-    html = html + '</div>';
-    $('.fileContainer').append(html);
-    $('.fileContainer').fadeIn();
+        '<div class="col-md-1"></div>' +
+        '</div>';
+    $.ajax({
+        async: true,
+        type: "get",
+        url: "src/controler.php?req=files",
+        success: function(res) {
+
+            var d = JSON.parse(res);
+            var doc_data = d;
+
+            var arr = [];
+
+            console.log(Object.keys(doc_data[folder]).length);
+            delete doc_data[folder]['folder_number'];
+            console.log(doc_data[folder]);
+            if (Object.keys(doc_data[folder]).length > 0) {
+                for (var key in doc_data[folder]) {
+
+
+                    var linkText = key;
+                    var idf = doc_data[folder][key].split('_');
+                    html = html + '<div class="row docRow">' +
+                        '<div class="col-md-1"><p>' + idf[0] + '</p></div>' +
+
+                        '<div class="col-md-9 ">' +
+                        '<p>' +
+                        '<a style="color:#333;" target="blank" href="' + linksUrl + '?docid=' + idf[0] + '">' +
+                        '<i style="font-size:15pt;color:darkred;" class="fa fa-file-pdf-o" aria-hidden="true"></i>       ' + linkText + '</a>' +
+                        '</p>' +
+                        '</div>' +
+
+                        '<div class="col-md-1"><p>' + idf[1] + '</p></div>' +
+                        '<div class="col-md-1"><i title="Borrar Documento" class="fa fa-trash delfile" data-folder="' + folder + '" data-docid="' + idf[0] + '" aria-hidden="true" ></i></div>' +
+                        '</div>';
 
 
 
+
+                }
+            } else if (Object.keys(doc_data[folder]).length == 0) {
+
+                html = html + '<div class="row docRow"><div class="col-md-12 docRow" style="background-color:white;color:#333;"><div class="docRowInnerCtnr"><p style="font-size:15;text-align:center;"><i class="fa fa-times" aria-hidden="true"></i>  No hay documentos.</div></div></div>';
+            }
+            html = html + '</div>';
+
+            $('.fileContainer').append(html);
+            $('.fileContainer').fadeIn();
+        }
+
+
+
+
+    });
 }
 
 function del_file(folder, file) {
 
     var fileUrl = '';
+    console.log(folder, file);
+    //Para borrar folder
     if (file == undefined && folder != '') {
         var mes = 'El folder <b>' + folder + '</b> y todo su contenido sera permanente borrado. Esta operacion NO es reverzible. Desea continuar?';
         $('#dialogo_confirmacion .confirmacion_mensaje').html(mes);
@@ -862,9 +1041,8 @@ function del_file(folder, file) {
                         type: 'get',
                         url: 'src/controler.php?req=deldir&folderName=' + folder,
                         success: function(res) {
-                            console.log(res)
                             if (res == 1) {
-                                renderFiles('both');
+                                renderFiles('cp');
                                 $('#dialog-message').html('<spam style="' + iconStyle + '" class="fa fa-thumbs-up" aria-hidden="true"></spam><p class="dialog_mess">Folder borrado exitosamente!</p>');
                                 $("#dialog-message").dialog({
                                     modal: true,
@@ -881,14 +1059,14 @@ function del_file(folder, file) {
                     });
                     $(this).dialog("close");
                 },
-                Cancel: function() {
+                "Cancelar": function() {
                     $(this).dialog("close");
                 }
             }
         });
-
+        //Para borrar documento
     } else {
-        var mes = 'El documento <b style="font-size:8pt !important;">' + file + '</b> sera permanente borrado. Esta operacion NO es reverzible. Desea continuar?';
+        var mes = 'El documento <b style="font-size:8pt !important;">' + file + '</b> sera permanente borrado de la carpeta ' + folder + '. Esta operacion NO es reverzible. Desea continuar?';
         $('#dialogo_confirmacion .confirmacion_mensaje').html(mes);
 
         $("#dialogo_confirmacion").dialog({
@@ -906,8 +1084,9 @@ function del_file(folder, file) {
                         type: 'get',
                         url: 'src/controler.php?req=delfile&docid=' + file,
                         success: function(res) {
-                            if (res == 1 && folder == '') {
-                                renderFiles('both');
+                            console.log(folder)
+                            if (res == 1 && folder == 1) {
+                                open_folder('Bandeja de entrada');
                                 $('#dialog-message').html('<spam style="' + iconStyle + '" class="fa fa-thumbs-up" aria-hidden="true"></spam><p class="dialog_mess">Documento borrado exitosamente!</p>');
                                 $("#dialog-message").dialog({
                                     modal: true,
@@ -920,7 +1099,6 @@ function del_file(folder, file) {
                                 });
                                 $('.loadingCtn').fadeOut();
                             } else {
-                                console.log(folder);
                                 open_folder(folder);
                                 $('#dialog-message').html('<spam style="' + iconStyle + '" class="fa fa-thumbs-up" aria-hidden="true"></spam><p class="dialog_mess">Documento borrado exitosamente!</p>');
                                 $("#dialog-message").dialog({
@@ -938,7 +1116,7 @@ function del_file(folder, file) {
                     });
                     $(this).dialog("close");
                 },
-                Cancel: function() {
+                "Cancelar": function() {
                     $(this).dialog("close");
                 }
             }
@@ -963,7 +1141,7 @@ function datos_usuario() {
         success: function(res) {
             var d = JSON.parse(res);
             var istyle = "float:right;";
-            var html = '<h4>Cambio de datos</h4><div class="ctn"><div class="row">' +
+            var html = '<h4>Datos de cuenta</h4><div class="ctn"><div class="row">' +
                 '<div class="col-md-6"><div>Nombre</div></div>' +
                 '<div class="col-md-6"><div class="row"><div class="col-md-9"><p>' + d['client_name'] + '</p></div><div class="col-md-3"><i data-field="Nombre" data-col="client_name" data-cid="' + d['client_id'] + '" class="fa fa-pencil edit" aria-hidden="true"></i></div></div></div>' +
                 '</div>' +
@@ -972,15 +1150,15 @@ function datos_usuario() {
                 '<div class="col-md-6"><div class="row"><div class="col-md-9"><p>' + d['client_lastname'] + '</p></div><div class="col-md-3"><i data-field="Apellido" data-col="client_lastname" data-cid="' + d['client_id'] + '" class="fa fa-pencil edit" aria-hidden="true"></i></div></div></div>' +
                 '</div>' +
                 '<div class="row">' +
-                '<div class="col-md-6"><div>Telefono Fijo</div> </div>' +
+                '<div class="col-md-6"><div>Teléfono Fijo</div> </div>' +
                 '<div class="col-md-6"><div class="row"><div class="col-md-9"><p>' + d['client_phone'] + '</p></div><div class="col-md-3"><i data-field="Telefono Fijo" data-col="client_phone" data-cid="' + d['client_id'] + '" class="fa fa-pencil edit" aria-hidden="true"></i></div></div></div>' +
                 '</div>' +
                 '<div class="row">' +
-                '<div class="col-md-6"><div>Telefono Movil</div></div>' +
+                '<div class="col-md-6"><div>Teléfono Móvil</div></div>' +
                 '<div class="col-md-6"><div class="row"><div class="col-md-9"><p>' + d['client_mobil'] + '</p></div><div class="col-md-3"><i data-field="Telefono Movil" data-col="client_mobil" data-cid="' + d['client_id'] + '" class="fa fa-pencil edit" aria-hidden="true"></i></div></div></div>' +
                 '</div>' +
                 '<div class="row">' +
-                '<div class="col-md-6"><div>Correo Electronico</div></div>' +
+                '<div class="col-md-6"><div>Correo Electrónico</div></div>' +
                 '<div class="col-md-6"><div class="row"><div class="col-md-9"><p>' + d['client_email'] + '</p></div><div class="col-md-3"><i data-field="Correo Electronico" data-col="client_email" data-cid="' + d['client_id'] + '" class="fa fa-pencil edit" aria-hidden="true"></i></div></div></div>' +
                 '</div>' +
                 '<div class="row">' +
@@ -988,7 +1166,7 @@ function datos_usuario() {
                 '<div class="col-md-6"><div class="row"><div class="col-md-9"><p>' + d['client_cedula'] + '</p></div><div class="col-md-3"><i data-field="NIT" data-col="client_cedula" data-cid="' + d['client_id'] + '" class="fa fa-pencil edit" aria-hidden="true"></i></div></div></div>' +
                 '</div>' +
                 '<div class="row">' +
-                '<div class="col-md-6"><div>Clave de Acceso</div></div>' +
+                '<div class="col-md-6"><div>Contraseña</div></div>' +
                 '<div class="col-md-6"><div class="row"><div class="col-md-9"><p>' + d['client_password'] + '</p></div><div class="col-md-3"><i class="fa fa-lock cambiarClaveBtn" aria-hidden="true"></i></div></div></div>' +
                 '</div></div>';
 
@@ -996,13 +1174,14 @@ function datos_usuario() {
             $('.cambiarDatosFormCtnr').fadeIn();
             $('.loadingCtn').fadeOut();
 
-            console.log(d);
+
         }
     });
 }
 
 function cambiar_clave(newpassdata) {
     console.log(newpassdata);
+    $('.loadingCtn').show();
     $.ajax({
         async: true,
         type: 'post',
@@ -1010,15 +1189,31 @@ function cambiar_clave(newpassdata) {
         url: 'src/controler.php?req=changepass',
         success: function(res) {
             console.log(res);
+            if (res == 1) {
+                $('.loadingCtn').fadeOut();
+                var iconStyle = 'font-size:18pt;color:green;float:left;';
+                $('#dialog-message').html('<spam style="' + iconStyle + '" class="fa fa-thumbs-up" aria-hidden="true"></spam><p class="dialog_mess"> Su clave se ah actualizado exitosamente! Un mensaje se ah enviado a su correo electronico confirmando sus cambios.</p>');
+                $("#dialog-message").dialog({
+                    modal: true,
+                    title: 'Exito!',
+                    buttons: {
+                        Ok: function() {
+                            datos_usuario()
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+
+            }
         }
     });
 }
 
 function editar_dato_usuario(data, id) {
-
+    $('.loadingCtn').show();
     var newd = data.split('=');
     var s = newd[0] + "='" + newd[1] + "'";
-    var obj = { key: newd[0], d: newd[1], field: s, cid: id };
+    var obj = { key: newd[0], d: newd[1], field: s };
     $.ajax({
         async: true,
         type: 'post',
@@ -1027,8 +1222,9 @@ function editar_dato_usuario(data, id) {
         success: function(res) {
             console.log(res);
             if (res == 1) {
+                $('.loadingCtn').fadeOut();
                 var iconStyle = 'font-size:18pt;color:green;float:left;';
-                $('#dialog-message').html('<spam style="' + iconStyle + '" class="fa fa-thumbs-up" aria-hidden="true"></spam><p class="dialog_mess"> Su informacion ah sido actializada exitosamente!</p>');
+                $('#dialog-message').html('<spam style="' + iconStyle + '" class="fa fa-thumbs-up" aria-hidden="true"></spam><p class="dialog_mess"> Su informacion ah sido actualizada exitosamente!</p>');
                 $("#dialog-message").dialog({
                     modal: true,
                     title: 'Exito!',
@@ -1047,4 +1243,91 @@ function editar_dato_usuario(data, id) {
     });
 
 
+}
+
+function info_y_contacto_de_empresa() {
+    $.ajax({
+        async: true,
+        type: "get",
+        url: "src/controler.php?req=empvin",
+        success: function(res) {
+            console.log(res);
+            var d = JSON.parse(res);
+            console.log(d);
+            var imgData = d.lgtpo_emprsa;
+            var img = 'data:image/jpeg;base64,' + hexToBase64(imgData);
+            var html = '<div class="row">' +
+
+                '<div class="col-md-6">' +
+                '<div class="logoEmpCtnr">' +
+                '<span style="display: inline-block;height: 100%;vertical-align: middle;"></span><img style="width:100px;" src="' + img + '">' +
+                '</div>' +
+                '</div>' +
+                '<div class="col-md-6">' +
+                '<div class="info_empresa_ctnr">' +
+
+                '<div class="row">' +
+                '<div class="col-md-4">' +
+                '<p><b>Nombre</b></p>' +
+                '</div>' +
+                '<div class="col-md-8">' +
+                '<p>' + d[0].nmbre_rzon_scial + '</p>' +
+                '</div>' +
+                '</div>' +
+
+                '<div class="row">' +
+                '<div class="col-md-4">' +
+                '<p><b>NIT</b></p>' +
+                '</div>' +
+                '<div class="col-md-8">' +
+                '<p>' + d[0].id_emprsa + '</p>' +
+                '</div>' +
+                '</div>' +
+
+                '<div class="row">' +
+                '<div class="col-md-4">' +
+                '<p><b>Direccion</b></p>' +
+                '</div>' +
+                '<div class="col-md-8">' +
+                '<p>' + d[0].drccion + '</p>' +
+                '</div>' +
+                '</div>' +
+
+                '<div class="row">' +
+                '<div class="col-md-4">' +
+                '<p><b>Ciudad</b></p>' +
+                '</div>' +
+                '<div class="col-md-8">' +
+                '<p>' + d[0].nmbre_mncpio + '</p>' +
+                '</div>' +
+                '</div>' +
+
+                '<div class="row">' +
+                '<div class="col-md-4">' +
+                '<p><b>Depto</b></p>' +
+                '</div>' +
+                '<div class="col-md-8">' +
+                '<p>' + d[0].nmbre_dpto + '</p>' +
+                '</div>' +
+                '</div>' +
+
+                '<div class="row">' +
+                '<div class="col-md-4">' +
+                '<p><b>Pais</b></p>' +
+                '</div>' +
+                '<div class="col-md-8">' +
+                '<p>' + d[0].nmbre_pais + '</p>' +
+                '</div>' +
+                '</div>' +
+
+                '</div>' +
+                '</div>' +
+
+                '</div>';
+
+
+            $('.dash').append(html);
+
+        }
+    });
 }

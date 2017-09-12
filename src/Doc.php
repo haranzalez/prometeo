@@ -1,12 +1,13 @@
 <?php 
 	ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
-    include 'dbcred.php';
+    
     error_reporting(E_ALL);
 
     class Doc {
 
         public function __construct($db){
+            include 'dbcred.php';
             $this->_conn = $db;
             $this->_nit = (isset($_SESSION['nit']))?$_SESSION['nit']:false;
             $this->generar_certificadoSQL = '';
@@ -31,11 +32,8 @@
         public function emprsas()
         {
             
-            
             if($this->_nit != false)
             {
-    
-                
                 $sql = "DROP TABLE if exists tbla_tmpral;";
             	
                 $sql .= "CREATE TEMP TABLE tbla_tmpral AS
@@ -43,7 +41,8 @@
                 FROM mvmnto_frmto_cncpto
                 WHERE id_trcro = '$this->_nit';";
 
-                $sql .= "SELECT DISTINCT b.id_emprsa,
+                $sql .= "SELECT DISTINCT 
+                b.id_emprsa,
                 b.nmbre_rzon_scial,
                 B.DRCCION,
                 B.WEB_SITE,
@@ -56,17 +55,49 @@
                 AND  a.id_emprsa = b.id_emprsa
                 AND  c.client_cedula = '$this->_nit'
                 AND  b.actvo = 1";
+
                 $this->emprsasSQL = $sql;
                 $res = $this->_conn->query($sql);
                 
                 $arr = array();
+                $arrId = array();
                 $i = 0;
                 while ($row = $res->fetch(PDO::FETCH_ASSOC)) {
                     $stream = stream_get_contents($row['lgtpo_emprsa']);
                     $data = substr($stream, 1);
-                    $row['lgtpo_emprsa'] = $data;
+                    $data_final = $data;
+                    $row['lgtpo_emprsa'] = $data_final;
+
+                    $sql2 = "SELECT 
+                    b.nmbre_pais,   
+                    c.nmbre_mncpio,   
+                    d.nmbre_cntcto,
+                    d.alias_cntcto,
+                    d.tlfno_fjo,
+                    d.tlfno_mvil,
+                    d.email_cntcto
+               FROM emprsas a,   
+                    paises b,   
+                    mncpios c,
+                    cntctos_emprsas d
+           
+              WHERE ( a.cdgo_pais = b.cdgo_pais ) and  
+                    ( b.cdgo_pais = c.cdgo_pais ) and  
+                    ( a.cdgo_dpto = c.cdgo_dpto ) and  
+                    ( a.cdgo_mncpio = c.cdgo_mncpio ) and
+                    (a.id_emprsa = d.id_emprsa) AND
+                    ( a.id_emprsa = '".$row['id_emprsa']."' )";
+                    $res2 = $this->_conn->query($sql2);
+                    while($row2 = $res2->fetch(PDO::FETCH_ASSOC)){
+                        $row['nmbre_pais'] = $row2['nmbre_pais'];
+                        $row['nmbre_mncpio'] = $row2['nmbre_mncpio'];
+                        $row['nmbre_cntcto'] = $row2['nmbre_cntcto'];
+                        $row['alias_cntcto'] = $row2['alias_cntcto'];
+                        $row['tlfno_fjo'] = $row2['tlfno_fjo'];
+                        $row['tlfno_mvil'] = $row2['tlfno_mvil'];
+                        $row['email_cntcto'] = $row2['email_cntcto'];
+                    }
                     $arr[] = $row;
-                    
                 }
 
                 $result = new stdClass();
@@ -74,14 +105,14 @@
                 return $result;
 
             }else{
-                return false;
+                return 'NIT FALSE';
             }
         }
-        public function generar_certificado($codigo_formato, $mes_inicial, $mes_final)
+        public function generar_certificado($codigo_formato, $mes_inicial, $mes_final, $nit_empresa)
         {
             try{
 
-                $mv = $this->getFields($this->_nit);
+                $mv = $this->getFields($nit_empresa);
                 $id_emp = $mv['id_emprsa'];
                 
 
@@ -118,22 +149,25 @@
                 mvmnto_frmto_cncpto e,
                 cncptos_dfndos f,   
                 cncptos_dfndos_prmtros g  
-                WHERE (e.id_emprsa = a.id_emprsa) AND 
-                (a.cdgo_pais = b.cdgo_pais) AND  
-                (a.cdgo_pais = c.cdgo_pais) AND  
-                (a.cdgo_dpto = c.cdgo_dpto) AND  
-                (a.cdgo_mncpio = c.cdgo_mncpio) AND
-                (e.id_emprsa = d.id_emprsa) AND
-                (e.cdgo_frmto = d.cdgo_frmto) AND     
-                (e.id_emprsa = f.id_emprsa) AND  
-                (e.cdgo_cncpto = f.cdgo_cncpto) AND  
-                (e.id_emprsa = g.id_emprsa) AND
-                (e.cdgo_cncpto = g.cdgo_cncpto)  AND
-                ((e.id_emprsa = $id_emp) AND 
-                (e.cdgo_frmto = $codigo_formato) AND  
-                (e.ano_mes_incial = '$mes_inicial') AND  
-                (e.ano_mes_fnal = '$mes_final') AND  
-                (e.id_trcro = '$this->_nit'));";
+                WHERE ( a.cdgo_pais = b.cdgo_pais ) and  
+                ( b.cdgo_pais = c.cdgo_pais ) and  
+                ( a.cdgo_dpto = c.cdgo_dpto ) and  
+                ( a.cdgo_mncpio = c.cdgo_mncpio ) and  
+                ( a.id_emprsa = d.id_emprsa ) and  
+                ( e.id_emprsa = a.id_emprsa ) and  
+                ( e.cdgo_frmto = d.cdgo_frmto ) and  
+                ( e.id_emprsa = f.id_emprsa ) and  
+                ( e.cdgo_cncpto = f.cdgo_cncpto ) and  
+                ( e.id_emprsa = g.id_emprsa ) and  
+                ( e.cdgo_cncpto = g.cdgo_cncpto ) and   
+                ( f.id_emprsa = g.id_emprsa ) and  
+                ( f.cdgo_cncpto = g.cdgo_cncpto ) and  
+                ( a.id_emprsa = $nit_empresa ) AND  
+                ( d.cdgo_frmto = $codigo_formato ) AND  
+                ( e.ano_mes_incial = '$mes_inicial' ) AND  
+                ( e.ano_mes_fnal = '$mes_final' ) AND  
+                (e.id_trcro = '$this->_nit' );";
+                 
                 $this->generar_certificadoSQL = $sql;
                 $res = $this->_conn->query($sql);
                 $arr = array();
@@ -197,12 +231,11 @@
                 b.nmbre_frmto,
                 a.id_emprsa
                 FROM tbla_tmpral  a,
-                frmtos_dfndos b,
-                users_web c
-                WHERE a.id_trcro = '$this->_nit'
+                frmtos_dfndos b
+                WHERE a.id_emprsa = b.id_emprsa
                 AND  a.cdgo_frmto = b.cdgo_frmto
+                AND  a.id_trcro = '$this->_nit'
                 AND  a.id_emprsa = $id
-                AND  c.client_cedula = '$this->_nit'
                 AND  b.actvo = 1";
                 $this->formatosSQL = $sql;
                 $res = $this->_conn->query($sql);
@@ -218,22 +251,8 @@
             }
             
         }
-        public function lista_documentos()
-        {
-            $dir = $_SERVER['DOCUMENT_ROOT'] . '/promTest/PDF/documents/';
-            $path = $dir.$this->_nit;
-            $files = scandir($path);
-            unset($files[0]);
-            unset($files[1]);
-            $files['folder'] = $this->_nit;
-            return $files;
-        }
-        public function crear_folder($nombre)
-        {
-            $dir = $_SERVER['DOCUMENT_ROOT'] . '/promTest/PDF/documents/'.$this->_nit;
-            mkdir($dir.'/'.$nombre);
-
-        }
+        
+       
         
     }
     

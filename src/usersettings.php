@@ -1,4 +1,5 @@
 <?php 
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -9,8 +10,8 @@ error_reporting(E_ALL);
         {
             $this->db = $db;
             $this->table = 'users_web';
-            $this->nit = $_SESSION['nit'];
-            $this->email = $_SESSION['email'];
+            $this->nit = (isset($_SESSION['nit']))?$_SESSION['nit']:false;
+            $this->email = (isset($_SESSION['email']))?$_SESSION['email']:false;
         }
         public function info_usuario()
         {
@@ -29,7 +30,7 @@ error_reporting(E_ALL);
                 $_SESSION['user_full_name'] = $_SESSION['user_name'].' '.$data['d'];
             }
             $sql = "UPDATE $this->table SET ".$data['field'];
-            $sql .= " WHERE client_id = '".$data['cid']."'";
+            $sql .= " WHERE client_email = '".$this->email."'";
             $res = $this->db->query($sql);
             if($res){
                 return 1;
@@ -42,7 +43,7 @@ error_reporting(E_ALL);
             $row = $res->fetch(PDO::FETCH_ASSOC);
             if(count($row) > 0)
             {
-                $sql2 = "UPDATE $this->table SET client_password = '". $newPass . "'";
+                $sql2 = "UPDATE $this->table SET client_password = '". $newPass . "' WHERE client_email = '$this->email'";
                 $res2 = $this->db->query($sql2);
                 if($res2){
                     return true;

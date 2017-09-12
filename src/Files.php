@@ -1,98 +1,269 @@
 <?php 
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-    class Files
+
+require_once('../PDF/fpdf.php');
+    class Files extends FPDF
     {
-        public function __construct(){
-            $this->nit = $_SESSION['nit'];
-            $this->dir = $_SERVER['DOCUMENT_ROOT'] . '/promTest/PDF/documents/'.$this->nit;
-            $this->file_list = $this->read_files();
+        public function __construct($db){
+            $this->nit = (isset($_SESSION['nit']))?$_SESSION['nit']:false;
+            $this->email = (isset($_SESSION['email']))?$_SESSION['email']:false;
+            $this->db = $db;
         }
-        private function read_files(){
-            $pkg = array();
-            $pkg['nit'] = $this->nit;
-            $files_main = scandir($this->dir);
-            unset($files_main[0]);
-            unset($files_main[1]);
-            if(count($files_main) == 0){
-                $pkg['nofiles'] = 'No hay documentos';
-                return $pkg;
-            }else{
-                $pkg['files_main'] = $files_main;
-                $i = 0;
-                foreach($files_main as $file)
-                {
-                    $f = substr($file, -4);
-                    if($f[0] != '.'){
-                        $name = 'file_'.$i;
-                        $arr = array();
-                        $fh = opendir($this->dir.'/'.$file);
-                        $arr['folder'] = $file; 
-                        while($row = readdir($fh)) 
-                        {
-                            if($row == '.' || $row == '..'){
-                                continue;
-                            }else{
-                                $arr[] = $row;
-                            }
-                        }
-                    }
-                    if(isset($name))
-                    {
-                        $pkg[$name] = $arr;
-                    }
-                    $i++;
-                }
-                return $pkg;
-            }
-        }
-        public function del_file($file)
-        {
-            $fh = fopen($this->dir.'/'.$file, 'w');
-            fclose($fh);
-            unlink($this->dir.'/'.$file);
-            return 1;
-        }
-        public function del_dir($path)
-        {
-            $realPath = $this->dir.'/'.$path;
-            if(is_dir($realPath) === true)
-            {
-                $files = array_diff(scandir($realPath), array('.', '..'));
         
-                foreach ($files as $file)
-                {
-                    Delete($realPath . '/' . $file);
-                }
-                return rmdir($realPath);
-            }else if(is_file($realPath) === true)
+        function return_pdf($doc_id)
+        {
+            $sql = "SELECT nmbre_pdf FROM usrios_web_mnjo_flders_det WHERE email_usrio = '".$this->email."' AND id_dcmnto = ".$doc_id;
+            $res = $this->db->query($sql);
+            $row = $res->fetch(PDO::FETCH_ASSOC);
+            $result = pg_unescape_bytea($row['nmbre_pdf']);
+            return $result;
+        }
+        function all_pdf(){
+            $sql = "SELECT asnto_dcmnto FROM usrios_web_mnjo_flders_det WHERE email_usrio = '".$this->email."'";
+            $res = $this->db->query($sql);
+            $arr = array();
+            $row = $res->fetch(PDO::FETCH_ASSOC);
+            if(count($row) > 0)
             {
-                return unlink($realPath);
+                while($row){
+                    $arr['nombre'] = $row['asnto_dcmnto'].'.pdf';
+                }
+                return $arr;
+            }else{
+                $arr['nofiles'] = 'No hay documentos.';
+                return $arr;
             }
-            return false;
-        }
-        public function new_dir($name)
-        {
-            mkdir($this->dir.'/'.$name);
-            return 1;
-        }
-        public function open_dir($dir_name)
-        {
-            $files = scandir($this->dir.'/'.$dir_name);
-            unset($files[0]);
-            unset($files[1]);
             
-            $pkg = new stdClass;
-            $pkg->nit = $this->nit;
-            $pkg->files = $files;
-            return $pkg;
+        }
+        function check_user()
+        {
+            $sql = "SELECT COUNT(*) FROM usrios_web_mnjo_flders_enc WHERE email_usrio = '".$this->email."'";
+            $res = $this->db->query($sql);
+            $row = $res->fetch(PDO::FETCH_ASSOC);
+            if($row['count'] != 0)
+            {
+                return true;
+            }else{
+                return false;
+            }
+        }
+        
+        function check_folder($name)
+        {
+            $sql = "SELECT COUNT(*) FROM usrios_web_mnjo_flders_enc WHERE nmbre_flder = '".$name."' AND email_usrio = '".$this->email."'";
+            $res = $this->db->query($sql);
+            $row = $res->fetch(PDO::FETCH_ASSOC);
+            if($row['count'] != 0)
+            {
+                return true;
+            }else{
+                return false;
+            }
+        }
+        function create_folder($name){
+            if(isset($name))
+            {
+                if($name == 'Bandeja de entrada' && $this->check_folder($name) === false)
+                {
+                    $bnum = 1;
+                    
+                    $sql = "INSERT INTO usrios_web_mnjo_flders_enc (email_usrio,
+                    nmro_flder,
+                    nmbre_flder,
+                    nmro_orden)
+                    VALUES('".$this->email."',
+                    '".$bnum."',
+                    'Bandeja de entrada',
+                    1)";
+                    $res = $this->db->query($sql);
+                    if($res)
+                    {
+                        return true;
+                    }
+                }else if($this->check_folder($name) === false){
+                    
+                    $fnum = $this->check_last_folder() + 1;
+                    $sql = "INSERT INTO usrios_web_mnjo_flders_enc (email_usrio,
+                    nmro_flder,
+                    nmbre_flder)
+                    VALUES('".$this->email."',
+                    '".$fnum."',
+                    '".$name."')";
+                    $res = $this->db->query($sql);
+                    if($res)
+                    {
+                        return true;
+                    }
+        
+                }else if($this->check_folder($name) === true){
+                    return false;
+                }
+            }
+            
+            
+        }
+        function cfolder($name)
+        {
+            if($this->check_user() === false && isset($name))
+            {
+                $bnum = 1;
+    
+                $sql = "INSERT INTO usrios_web_mnjo_flders_enc (email_usrio,
+                nmro_flder,
+                nmbre_flder,
+                nmro_orden)
+                VALUES('".$this->email."',
+                '".$bnum."',
+                'Bandeja de entrada',
+                1)";
+                $res = $this->db->query($sql);
+    
+                if($res && $this->check_folder($name) !== true){
+                    $fnum = $this->check_last_folder() + 1;
+                    $sql = "INSERT INTO usrios_web_mnjo_flders_enc (email_usrio,
+                    nmro_flder,
+                    nmbre_flder)
+                    VALUES('".$this->email."',
+                    '".$fnum."',
+                    '".$name."')";
+                    $res = $this->db->query($sql);
+                    if($res)
+                    {
+                        return true;
+                    }
+    
+                }else if($this->check_folder($name) === true){
+                    return 'Folder already exist';
+                }
+            }else if($this->check_user() === true && isset($name)){
+    
+                if($this->check_folder($name) !== true){
+    
+                    $fnum = $this->check_last_folder() + 1;
+    
+                    $sql = "INSERT INTO usrios_web_mnjo_flders_enc (email_usrio,
+                    nmro_flder,
+                    nmbre_flder)
+                    VALUES('".$this->email."',
+                    '".$fnum."',
+                    '".$name."')";
+                    $res = $this->db->query($sql);
+    
+                    if($res)
+                    {
+                        return true;
+                    }
+    
+                }else if($this->check_folder($name) === true)
+                {
+                    return 'Folder already exist';
+                }
+               
+            }else{
+    
+                return false;
+    
+            }
+            
+           
+        }
+        function check_last_folder()
+        {
+            $sql = "SELECT * FROM usrios_web_mnjo_flders_enc WHERE email_usrio = '".$this->email."' order by nmro_orden";
+            $res = $this->db->query($sql);
+            $arr = array();
+            while($row = $res->fetch(PDO::FETCH_ASSOC))
+            {
+                $arr[] = $row['nmro_flder'];
+            }
+           
+            return max($arr);
+        }
+        function folder_list()
+        {
+            $sql = "SELECT * FROM usrios_web_mnjo_flders_enc WHERE email_usrio = '".$this->email."' order by nmro_orden";
+            $res = $this->db->query($sql);
+
+            $main = array();
+            
+            while($row = $res->fetch(PDO::FETCH_ASSOC))
+            {
+                $main[$row['nmbre_flder']] = array();
+                $sqlfi = "SELECT * FROM usrios_web_mnjo_flders_det WHERE email_usrio = '".$this->email."' AND nmro_flder = ".$row['nmro_flder'];
+                $resfi = $this->db->query($sqlfi);
+                $main[$row['nmbre_flder']]['folder_number'] = ($row['nmbre_flder'] == 'Bandeja de entrada')?1:$row['nmro_flder'];
+                while($rowfi = $resfi->fetch(PDO::FETCH_ASSOC))
+                {
+                    $main[$row['nmbre_flder']][$rowfi['asnto_dcmnto']] = $rowfi['id_dcmnto'] . '_' . $rowfi['fcha_dcmnto'];   
+                }
+            }
+            return $main;
+           
+        
+        }
+    
+        function del_doc($doc_id)
+        {
+            $sql = "DELETE FROM usrios_web_mnjo_flders_det WHERE email_usrio = '".$this->email."' AND id_dcmnto = ".$doc_id;
+            $res = $this->db->query($sql);
+            if($res)
+            {
+                return true;
+            }else{
+                return false;
+            }
+        }
+    
+        function del_folder($fname)
+        {
+            $sqlfiles = "DELETE FROM usrios_web_mnjo_flders_det WHERE email_usrio = '".$this->email."' AND nombre_folder = '".$fname."'";
+            $resFiles = $this->db->query($sqlfiles);
+            if($resFiles)
+            {
+                $sql = "DELETE FROM usrios_web_mnjo_flders_enc WHERE email_usrio = '".$this->email."' AND nmbre_flder = '".$fname."'";
+                $res = $this->db->query($sql);
+                if($res)
+                {
+                    return true;
+                }else{
+                    return false;
+                }
+    
+            }
+            
+    
+        }
+        function encrypt($val)
+        {
+            return sha1($val);
         }
        
     }
 
-    
+    /*
+    select count(*)
+INTO:nmro_rgtsros
+from usrios_web_mnjo_flders_enc
+where email_usrio = '*'
+and nmro_flder = 1
+
+if nmro_rgstros = 0 THEN
+//gRABO REGISTRO DE BANDEJA ENTRADA
+in
+
+
+select max(nmro_flder)
+INTO:nmro_rgstros
+from usrios_web_mnjo_flders_enc
+where email_usrio = '*';
+
+nmro_flder = nmro_rgstros ++
+funtion (nmro_flder,nmbre_flder)
+
+select 
+
+
+    */
 
     
     

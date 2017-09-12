@@ -17,6 +17,7 @@
     }
     $user = (isset($_SESSION['user_full_name']))?$_SESSION['user_full_name']:'Uknown';
     $nit = (isset($_SESSION['nit']))?$_SESSION['nit']:'Uknown';
+    $email = (isset($_SESSION['email']))?$_SESSION['email']:'Uknown';
     
 
     
@@ -53,8 +54,8 @@ body {
     
     <div class="headerPortal">
         <div class="row">
-            <div class="col-md-12 logo_corporativo"></div>
-            <div class="col-md-10"><img class="logoPortal" src="img/logo_ppal.png" alt=""></div>
+            <div class="col-md-10"><img class="logoPortal" src="img/logo_ppal.png" alt=""> <apan style="letter-spacing:2;">(BETA)</span></div>
+            
             <div class="col-md-2 slogan"><p><b>SQL Soluciones Informaticas SAS</b><br/> Tel: 524 24 36 <br/>Email: info@sqlprometeo.com <br/>www.sqlprometeo.com</p></div>
         </div>
     </div>
@@ -79,7 +80,7 @@ body {
     <div class="row">
         <div class="col-md-12 certificado_fecha_emicion"></div>
     </div>
-    <h4>Pretencion practicada a:</h4>
+    <h4>Retencion practicada a:</h4>
     <div class="tabla1">
         <div class="row" >
             <div class="col-md-6" style="font-weight:500;"><p style="margin:0px !important;">Nombre Razon Social:</p></div>
@@ -115,26 +116,29 @@ body {
     <div class="wrapper">
        
         <div class="main row">
-        <div class="loadingCtn"><div class="loading"></div></div>
+        <div class="loadingCtn"><div class="loadBg"><div class="loading"></div><p style="text-align:center;">Trabajando..</p></div>  </div>
             <!-- SIDE BAR -->
             <div class="sideBar col-md-2">
 
                 <div class="row">
                     
                     <div class="col-md-12" style="font-size:8pt;">
-                        <div style="padding:20px; color:#444;">
-                            <h5 style="color:#222;font-size:14pt;"><i style="font-size:17pt;" class="fa fa-user-circle" aria-hidden="true"></i> <?php echo $user; ?></h5>
-                            <p style="padding-left:33px;">ID: <?php echo $nit; ?></p>
+                        <div style="padding:7px 15px; color:#444;">
+                            <h5 style="color:#222;font-size:11pt;margin-bottom:0px;"><i style="font-size:17pt;" class="fa fa-user-circle" aria-hidden="true"></i> <?php echo $user; ?></h5>
+                            <p style="padding-left:28px;margin-bottom:0px;"><?php echo $email; ?></p>
+                            <p style="padding-left:28px;">NIT: <?php echo $nit; ?></p>
                         </div>
                         
                     </div>
                 </div>
 
                 <ul class="cPannel">
+                
                 <li><a href="#" class="portalNavDocBtn" data-nav="2" data-empresa="documents" ><i class="fa fa-files-o" aria-hidden="true"></i>  Manejo de documentos</a></li>
                 <li><ul class="folderlist" style="list-style:none;"></ul></li>
-                <li><a href="#" class="portalNavEmpBtn" data-nav="1" data-empresa="empVinculadas"><i class="fa fa-building" aria-hidden="true"></i>  Empresas vinculadas</a></li>
-                <li><a href="#" class="portalNavEmpBtn" data-nav="1" data-empresa="empVinculadas"><i class="fa fa-certificate" aria-hidden="true"></i>  Generar Certificado</a></li>
+                <li><a href="#" type="button" class="portalNavEmpBtn genCertBtn" data-nav="1" data-empresa="empVinculadas"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>  Generar Certificado</a></li>
+                <li><a href="#" class="portalNavEmpInfoBtn" data-nav="1" data-empresa="empVinculadas"><i class="fa fa-building" aria-hidden="true"></i>  Empresas vinculadas</a></li>
+                
                 <li><a href="#" class="portalNavPqrsBtn"><i class="fa fa-question-circle" aria-hidden="true"></i>  PQRS</a></li>
                 </ul>
                
@@ -147,28 +151,23 @@ body {
             <!-- SIDE BAR ENDS -->
             
             <div class="dash col-md-10">
-            
-            <div class="cambiarDatosFormCtnr"></div>
-
-            <div class="empresas_contenedor"><h4 class="secTitle" style="color:#ccc;">Empresas Vinculadas</h4><div class="empRowCtnr"></div></div>
-
-            <div class="fileContainer"><div class="filesLoading"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
-            <span class="sr-only">Loading...</span></div></div>
-            </div>
-            <div class="documentos">
                 
-                <div class="btn-group">
-               
-                </div>
-            </div>
 
+                <div class="empresas_contenedor"><h4 class="secTitle" style="color:#ccc;"></h4><div class="empRowCtnr"></div></div>
+                <div class="fileContainer"></div>
+                <div class="cambiarDatosFormCtnr"></div>
+
+               
+            </div>
+           
         </div>
+        <div style="text-align: center; padding:30px 0px;width:50%;margin:auto;bottom:0px;right:17%;position:absolute;">
+            <p style="color: #333">&copy;2017 Prometeo. Todos los derechos reservados.</p>
+    </div>
              
     </div>
 
-    <footer style="text-align: center; padding:30px 0px;width:50%;margin:auto;">
-            <p style="color: #fcb72d">&copy;2017 Prometeo. Todos los derechos reservados.</p>
-    </footer>
+    
     <?php include 'includes/footer.inc.php';?>
 
 </body>

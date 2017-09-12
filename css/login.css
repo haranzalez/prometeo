@@ -1,0 +1,223 @@
+#regForm,
+#recPassForm {
+    display: none;
+}
+
+.message_field {
+    display: none;
+}
+
+.contain {
+    margin-top: 3%;
+}
+
+.logo {
+    width: 280px;
+    margin: auto;
+    position: relative;
+    text-align: center;
+}
+
+#login-dialog-modal .dialog_mess {
+    font-size: 10pt;
+    padding-top: 10px !important;
+    padding-right: 0px !important;
+    line-height: 1;
+    /* width: 240px; */
+    display: block;
+    margin: auto;
+    margin-left: 35;
+    padding-left: 15px;
+}
+
+.log_box_title {
+    text-align: center;
+    width: 100%;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+}
+
+#login-dialog-modal .fa {
+    font-size: 25pt;
+    display: block;
+    margin-top: 15px;
+}
+
+.ui-widget-header {
+    border: 0px !important;
+    background: #eee;
+    color: #333333;
+    font-weight: bold;
+    border-radius: 2px !important;
+}
+
+.ui-dialog {
+    position: absolute;
+    height: auto;
+    width: 300px;
+    top: 26% !important;
+    left: 570.5px;
+    z-index: 101;
+}
+
+.ui-corner-all {
+    border-radius: 2px !important;
+}
+
+.feedMess,
+.mess {
+    padding: 15px;
+    color: darkred;
+    line-height: 1;
+    text-align: center;
+}
+
+.logo img {
+    width: 230px;
+    margin-left: -30px;
+}
+
+.logo h2 {
+    color: white;
+    font-weight: 200;
+}
+
+.logBox {
+    max-width: 450px;
+    margin: 10px auto;
+    border: #eee 1px solid;
+    border-radius: 3px;
+    background-color: white;
+    box-shadow: 0px 1px 2px #333;
+    position: relative !important;
+    overflow: hidden;
+}
+
+#regForm,
+#loginForm,
+#recPassForm {
+    margin-top: 20px;
+    margin-bottom: 0px;
+}
+
+#regForm input,
+#loginForm input,
+#recPassForm input {
+    width: 100%;
+    margin: 3px 0px;
+    padding: 10;
+    border-radius: 3px;
+    border: #eee solid .5px;
+    outline: none;
+}
+
+#loginForm,
+#regForm,
+#recPassForm {
+    padding: 0px 40px;
+}
+
+#loginForm input[type=text],
+#loginForm input[type=password] {
+    padding-left: 50px;
+}
+
+#loginForm input:focus {
+    border: #333 solid .5px;
+}
+
+#loginForm .userIcon,
+#loginForm .passIcon {
+    font-size: 16px;
+    position: absolute;
+    top: 16;
+    left: 30;
+    padding-right: 10px;
+    border-right: 1px solid #8799AD;
+    color: #333;
+}
+
+#loginForm .logInBtn,
+#regForm .regSubBtn,
+#recPassForm button {
+    width: 100%;
+    padding: 10px;
+    border-radius: 3px;
+    border: none;
+    color: white;
+    background-color: darkred;
+    margin-top: 3px;
+}
+
+#loginForm .logInBtn:hover,
+#regForm .regSubBtn:hover,
+#recPassForm button:hover {
+    background-color: orangered;
+}
+
+.logBox .newUserLinkBox {
+    margin: 10px auto;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+    width: 70%;
+}
+
+.logBox .newUserLinkBox p {
+    text-align: center;
+}
+
+.logBox .newUserLinkBox p a {
+    color: #ccc;
+}
+
+.logBox .newUserLinkBox p a:hover {
+    color: #333;
+}
+
+.logBox .loginMess {
+    color: orangered;
+    text-align: center;
+}
+
+.logBoxActionBtns button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    background-color: #eee;
+}
+
+.logBoxActionBtns div:nth-child(1) button {
+    border-top-left-radius: 3px;
+}
+
+.logBoxActionBtns div:nth-child(2) button {
+    border-top-right-radius: 3px;
+}
+
+.logBoxActionBtns button:focus {
+    background-color: #333;
+    outline: none;
+    color: white;
+}
+
+.logBoxActionBtns div:nth-child(1) {
+    padding-right: 0px;
+}
+
+.logBoxActionBtns div:nth-child(2) {
+    padding-left: 0px;
+}
+
+.httMess {
+    width: 100%;
+    padding: 10px 0px;
+    background-color: rgba(255, 63, 52, .8);
+    color: white;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2001;
+    display: none;
+}

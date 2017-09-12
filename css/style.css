@@ -11,23 +11,22 @@
      background-color: #ffcc66;
      width: 100% !important;
      padding: 20px;
-     border-bottom: 1px solid orangered;
+     border-bottom: 1px solid darkred;
  }
  
  .header img {
      width: 200px;
  }
  
- .header .signInBtn {
-     margin-top: 5%;
+ .signInBtn {
      padding: 8;
      font-size: 9pt;
      background-color: white;
-     border: #ccc 1px solid;
-     border-radius: 5px;
+     border: #ddd 1px solid;
+     border-radius: 2px;
  }
  
- .header .signInBtn:hover {
+ .signInBtn:hover {
      color: silver;
  }
  
@@ -54,33 +53,37 @@
      width: 90%;
  }
  
+ .col-md-6.mainTitleContainer .row {
+     margin-left: 0px;
+ }
+ 
  .registrarseBtn {
-     width: 150px;
-     background-color: orangered;
-     padding: 5px;
+     background-color: darkred;
+     padding: 8;
+     font-size: 9pt;
      color: white;
-     border: none;
-     border-radius: 5px;
-     margin-top: 20;
+     border: #ddd 1px solid;
+     border-radius: 2px;
+     width: 95%;
  }
  
  .registrarseBtn:hover {
-     background-color: orange;
+     background-color: orangered;
  }
  
  .stkContainer {
      margin: auto;
      width: 70.5%;
      border: solid 1px rgba(255, 255, 255, .4);
-     margin-top: 20% !important;
+     margin-top: 15% !important;
      margin-left: 19% !important;
      font-size: 8pt !important;
      color: black;
      padding: 20px !important;
      background-color: rgba(255, 255, 255, .4);
      position: relative !important;
-     border-radius: 5px;
-     box-shadow: 0 8px 6px -7px #333;
+     border-radius: 3px;
+     box-shadow: 0 1px 1px #333;
  }
  
  .stkContainer div {
@@ -138,7 +141,9 @@
  }
  
  .otherLinks {
-     padding-bottom: 5px !important;
+     padding-bottom: 35px !important;
+     width: 90%;
+     margin: auto;
  }
  
  .otherLinks img {
@@ -156,9 +161,10 @@
  .otherLinks h2 {
      text-align: left;
      padding: 10px 0px;
-     border-bottom: 1px solid orangered;
+     border-bottom: 1px solid darkred;
      width: 300px;
      margin-left: 70px;
+     margin-bottom: 35px;
  }
  /* FRONT PAGE STYLES END*/
  /*-----------------------------------------------------*/
@@ -166,41 +172,31 @@
  
  .formContainer {
      max-width: 400px;
-     padding: 0px 40px;
+     padding: 0px 0px;
      background-color: white;
-     border: solid 1px #ccc;
-     border-radius: 5px;
+     border: solid 1px #eee;
+     border-radius: 3px;
      position: fixed;
-     z-index: 2001;
+     z-index: 2;
      margin: -87px auto;
      left: 0;
      right: 0;
-     box-shadow: 0px 1px 4px #333;
+     box-shadow: 0px 1px 1px #333;
      display: none;
- }
- 
- .formContainer form {
-     margin: 0px;
- }
- 
- .formContainer input {
-     width: 100%;
-     margin: 5px 0px;
-     padding: 5px;
-     border: solid 1px #ccc;
-     border-radius: 5px;
+     overflow: hidden;
  }
  
  .formContainer button {
-     background-color: orangered;
+     background-color: darkred;
      color: white;
      border: none;
-     border-radius: 5px;
+     border-radius: 3px !important;
      padding: 10px 20px;
      width: 100%;
      padding: 5px;
      border: solid 1px #ccc;
      border-radius: 5px;
+     margin-top: 3px;
  }
  
  .formContainer button:hover {
@@ -214,181 +210,80 @@
  .closeRegBtn:hover {
      color: #333;
  }
- /*REGISTRATION FORM MAIN PAGE ENDS*/
- /*-----------------------------------------------------*/
- /*LOG IN PAGE STYLES */
  
- #regForm,
  #recPassForm {
      display: none;
  }
  
- .message_field {
-     display: none;
- }
- 
- .contain {
-     margin-top: 3%;
- }
- 
- .logo {
-     width: 250px;
-     margin: auto;
-     position: relative;
-     margin-bottom: 30px;
-     text-align: center;
- }
- 
- .logo img {
-     width: 230px;
-     margin-left: -30px;
- }
- 
- .logo h2 {
-     color: white;
-     font-weight: 200;
- }
- 
- .logBox {
-     max-width: 450px;
-     margin: 10px auto;
-     border: #ccc 1px solid;
-     border-radius: 7px;
-     background-color: white;
-     box-shadow: 0px 2px 5px #333;
-     position: relative !important;
- }
- 
  #regForm,
- #loginForm,
  #recPassForm {
-     margin-top: 20px;
- }
- 
- #loginForm {
-     margin-top: 30px;
+     margin-top: 0px;
+     margin-bottom: 15px;
+     padding: 0 40 !important;
  }
  
  #regForm input,
- #loginForm input,
  #recPassForm input {
      width: 100%;
-     margin: 5px 0px;
-     padding: 10px;
-     border-radius: 5px;
-     border: #ccc solid .5px;
+     margin: 3px 0px;
+     padding: 7;
+     border-radius: 3px;
+     border: #eee solid .5px;
      outline: none;
  }
  
- #loginForm,
- #regForm,
  #recPassForm {
-     padding: 0px 40px;
+     padding: 0px 0px;
  }
  
- #loginForm input[type=text],
- #loginForm input[type=password] {
-     padding-left: 50px;
+ .ui-widget-header {
+     border: 0px !important;
+     background: #eee;
+     color: #333333;
+     font-weight: bold;
+     border-radius: 2px !important;
  }
  
- #loginForm input:focus {
-     border: #333 solid .5px;
- }
- 
- #loginForm .userIcon,
- #loginForm .passIcon {
-     font-size: 16px;
-     position: absolute;
-     top: 19;
-     left: 30;
-     padding-right: 10px;
-     border-right: 1px solid #8799AD;
-     color: #333;
- }
- 
- #loginForm .logInBtn,
- #regForm .regSubBtn,
- #recPassForm button {
+ .log_box_title {
+     text-align: center;
      width: 100%;
      padding: 10px;
-     border-radius: 5px;
-     border: orangered solid .5px;
-     color: white;
-     background-color: orangered;
- }
- 
- #loginForm .logInBtn:hover,
- #regForm .regSubBtn:hover,
- #recPassForm button:hover {
-     background-color: orange;
- }
- 
- .logBox .newUserLinkBox {
-     margin: 10px auto;
-     border-top: 1px solid #ccc;
-     padding-top: 20px;
-     width: 70%;
- }
- 
- .logBox .newUserLinkBox p {
-     text-align: center;
- }
- 
- .logBox .newUserLinkBox p a {
-     color: #ccc;
- }
- 
- .logBox .newUserLinkBox p a:hover {
-     color: #333;
- }
- 
- .logBox .loginMess {
-     color: orangered;
-     text-align: center;
- }
- 
- .logBoxActionBtns button {
-     width: 100%;
-     padding: 15px;
-     border: none;
-     background-color: #ccc;
- }
- 
- .logBoxActionBtns div:nth-child(1) button {
-     border-top-left-radius: 7px;
- }
- 
- .logBoxActionBtns div:nth-child(2) button {
-     border-top-right-radius: 7px;
- }
- 
- .logBoxActionBtns button:focus {
      background-color: #333;
-     outline: none;
      color: white;
+     font-size: 14pt;
  }
  
- .logBoxActionBtns div:nth-child(1) {
-     padding-right: 0px;
+ #login-dialog-modal .fa {
+     font-size: 25pt;
+     display: block;
+     margin-top: 15px;
  }
  
- .logBoxActionBtns div:nth-child(2) {
-     padding-left: 0px;
+ #login-dialog-modal .dialog_mess {
+     font-size: 10pt;
+     padding-top: 10px !important;
+     padding-right: 0px !important;
+     line-height: 1;
+     /* width: 240px; */
+     display: block;
+     margin: auto;
+     margin-left: 35;
+     padding-left: 15px;
  }
  
- .httMess {
-     width: 100%;
-     padding: 10px 0px;
-     background-color: rgba(255, 63, 52, .8);
-     color: white;
-     text-align: center;
+ .ui-dialog {
      position: absolute;
-     top: 0;
-     left: 0;
-     z-index: 2001;
-     display: none;
+     height: auto;
+     width: 300px;
+     top: 26% !important;
+     left: 570.5px;
+     z-index: 101;
  }
- /* LOG IN PAGE STYLES ENDS*/
+ 
+ .ui-corner-all {
+     border-radius: 2px !important;
+ }
+ /*REGISTRATION FORM MAIN PAGE ENDS*/
  /*-----------------------------------------------------*/
  /*PARSLEY STYLES*/
  
