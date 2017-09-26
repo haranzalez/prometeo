@@ -57,7 +57,7 @@ class PDF extends FPDF
             {
                 $this->SetMargins(20, 10, 20);
                 $this->AddPage();
-                $this->title = 'CERTIFICADO DE '.$this->data_certificate[0]['nmbre_frmto'].' ANO GRAVABLE '.substr($this->data_certificate[0]['ano_mes_fnal'],0,4);
+                $this->title = utf8_decode('CERTIFICADO DE '.$this->data_certificate[0]['nmbre_frmto'].' AÑO GRAVABLE '.substr($this->data_certificate[0]['ano_mes_fnal'],0,4));
                 $this->SetTitle($this->title);
                 $this->logo();
                 $this->Header();
@@ -133,7 +133,7 @@ class PDF extends FPDF
             $file = $this->data_certificate[0]['nmbre_frmto'].'_'.$this->generar_id('D');
             $this->SetMargins(20, 10, 20);
             $this->AddPage();
-            $this->title = 'CERTIFICADO DE '.$this->data_certificate[0]['nmbre_frmto'].' ANO GRAVABLE '.substr($this->data_certificate[0]['ano_mes_fnal'],0,4);
+            $this->title = 'CERTIFICADO DE '.$this->data_certificate[0]['nmbre_frmto'].' AÑO GRAVABLE '.substr($this->data_certificate[0]['ano_mes_fnal'],0,4);
             $this->SetTitle($this->title);
             $this->logo();
             $this->Header();
@@ -150,7 +150,7 @@ class PDF extends FPDF
             $file = $this->data_certificate[0]['nmbre_frmto'].'_'.$this->generar_id('D');
             $this->SetMargins(20, 10, 20);
             $this->AddPage();
-            $this->title = 'CERTIFICADO DE '.$this->data_certificate[0]['nmbre_frmto'].' ANO GRAVABLE '.substr($this->data_certificate[0]['ano_mes_fnal'],0,4);
+            $this->title = 'CERTIFICADO DE '.$this->data_certificate[0]['nmbre_frmto'].' AÑO GRAVABLE '.substr($this->data_certificate[0]['ano_mes_fnal'],0,4);
             $this->SetTitle($this->title);
             $this->logo();
             $this->Header();
@@ -187,7 +187,7 @@ class PDF extends FPDF
         $this->SetY(65);
         $this->SetFont('Arial','',8);
         $this->SetTextColor(3,3,3);
-        $this->Cell(0,10,'Fecha Emision '.$this->fecha_de_hoy(),0,0,'C');
+        $this->Cell(0,10,utf8_decode('Fecha Emisión').$this->fecha_de_hoy(),0,0,'C');
     }
     function companyDetails()
     {
@@ -207,10 +207,10 @@ class PDF extends FPDF
         $this->Cell(0,10,$this->data_certificate[0]['drccion'],0,0,'C',false);
         $this->Ln(5);
         $this->SetX($x);
-        $this->Cell(0,10,'Telefonos: 4447292',0,0,'C',false);
+        $this->Cell(0,10,utf8_decode('Teléfonos : 4472365'),0,0,'C',false);
         $this->Ln(5);
         $this->SetX($x);
-        $this->Cell(0,10,$this->data_certificate[0]['nmbre_mncpio'].', '.$this->data_certificate[0]['nmbre_pais'],0,0,'C',false);
+        $this->Cell(0,10,utf8_decode($this->data_certificate[0]['nmbre_mncpio'].', '.$this->data_certificate[0]['nmbre_pais']),0,0,'C',false);
         $this->Ln(5);
         $this->SetX($x);
         $this->Cell(0,10,$this->data_certificate[0]['web_site'],0,0,'C',false);
@@ -223,21 +223,21 @@ class PDF extends FPDF
         $this->SetFont('Arial','B',9);
         $this->SetTextColor(3,3,3);
         $this->SetDrawColor(180,180,180);
-        $this->cell(0,10,'Retencion practicada a:',0,0,'L',false);
+        $this->cell(0,10,utf8_decode('Retención practicada a:'),0,0,'L',false);
         
         $this->Ln();
-        $this->cell(83,6,'Razon Social:','B');
+        $this->cell(83,6,utf8_decode('Razón Social:'),'B');
         $this->SetFont('Arial','',9);
-        $this->cell(83,6,utf8_encode($this->data_certificate[0]['nmbre_trcro']),'B');
+        $this->cell(83,6,utf8_decode($this->data_certificate[0]['nmbre_rzon_scial']),'B');
         $this->Ln();
         $this->SetFont('Arial','B',9);
-        $this->cell(83,6,'NIT:','B');
+        $this->cell(83,6,utf8_decode('Nit ó Cédula:'),'B');
         $this->SetFont('Arial','',9);
         $this->cell(83,6,number_format($this->data_certificate[0]['id_emprsa']),'B');
         
-    }catch(PDOException $ex) {
-        print_r($db->errorInfo());
-    }
+        }catch(PDOException $ex) {
+            print_r($db->errorInfo());
+        }
          
 
         
@@ -245,20 +245,20 @@ class PDF extends FPDF
     function tabla2()
     {
         // Header
-        $header = array('Concepto', 'Tasa', 'Base', 'Retencion');
+        $header = array('Concepto', 'Tasa', 'Valor Gravable', utf8_decode('Retención'));
         $data = array();
         if(count($this->data_certificate) > 1)
         {
             for ($i=0; $i < count($this->data_certificate); $i++) { 
-                $data[] = $this->data_certificate[$i]['nmbre_cncpto'];
+                $data[] = utf8_decode($this->data_certificate[$i]['nmbre_cncpto']);
                 $data[] = $this->data_certificate[$i]['prcntje_aplccion'].'%';
                 $data[] = ($this->data_certificate[$i]['vlor_grvble'] * $this->data_certificate[$i]['prcntje_aplccion'])/100;
                 $data[] = $this->data_certificate[$i]['vlor_grvble'];
             }
         }else if(count($this->data_certificate) == 1){
-            $data['nombre'] = $this->data_certificate[0]['nmbre_cncpto'];
+            $data['nombre'] = utf8_decode($this->data_certificate[0]['nmbre_cncpto']);
             $data['porce'] = $this->data_certificate[0]['prcntje_aplccion'].'%';
-            $data['val1'] = ($this->data_certificate[0]['vlor_grvble'] * $this->data_certificate[0]['prcntje_aplccion'])/100;
+            $data['val1'] = ($this->data_certificate[0]['vlor_grvble'] / $this->data_certificate[0]['prcntje_aplccion'])*100;
             $data['val2'] = $this->data_certificate[0]['vlor_grvble'];
         }
         
@@ -266,7 +266,7 @@ class PDF extends FPDF
         $this->SetFont('Arial','',10);
         $this->SetTextColor(3,3,3);
         $this->SetDrawColor(180,180,180);
-        $this->Cell(0,10,'Por los conceptos que se detallan a continuacion:',0,0,'L',false);
+        $this->Cell(0,10,utf8_decode('Por los conceptos que se detallan a continuación:'),0,0,'L',false);
         $this->Ln();
         $headerCellWidth = array(83,28,28,27);
         $j = 0;
@@ -405,7 +405,7 @@ class PDF extends FPDF
             {
                 $this->SetMargins(20, 10, 20);
                 $this->AddPage();
-                $this->title = 'CERTIFICADO DE '.$this->data_certificate[0]['nmbre_frmto'].' ANO GRAVABLE '.substr($this->data_certificate[0]['ano_mes_fnal'],0,4);
+                $this->title = utf8_decode('CERTIFICADO DE '.$this->data_certificate[0]['nmbre_frmto'].' AÑO GRAVABLE '.substr($this->data_certificate[0]['ano_mes_fnal'],0,4));
                 $this->SetTitle($this->title);
                 $this->logo();
                 $this->Header();
@@ -441,7 +441,7 @@ class PDF extends FPDF
                 // $file = $pieces[0].'_'.rand().'.'.$pieces[1];
                 $this->SetMargins(20, 10, 20);
                 $this->AddPage();
-                $this->title = 'CERTIFICADO DE '.$this->data_certificate[0]['nmbre_frmto'].' ANO GRAVABLE '.substr($this->data_certificate[0]['ano_mes_fnal'],0,4);
+                $this->title = utf8_decode('CERTIFICADO DE '.$this->data_certificate[0]['nmbre_frmto'].' AÑO GRAVABLE '.substr($this->data_certificate[0]['ano_mes_fnal'],0,4));
                 $this->SetTitle($this->title);
                 $this->logo();
                 $this->Header();

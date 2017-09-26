@@ -1,6 +1,53 @@
+img,
+embed,
+object,
+video {
+    max-width: 100%;
+}
+
+.loadingCtn {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 2020;
+    background-color: rgba(255, 255, 255, .5);
+    display: none;
+    top: 0;
+}
+
+.loading {
+    width: 80px;
+    height: 60px;
+    margin: auto;
+    background: url(../img/Blocks.svg);
+    background-size: cover;
+    background-position-x: 0px;
+    background-position-y: 0;
+}
+
+.loadBg {
+    z-index: 2020;
+    margin-top: 15% !important;
+    background-color: white;
+    width: 87px;
+    height: 87px;
+    padding: 0px;
+    margin: auto;
+    position: relative;
+    box-shadow: 0px 1px 2px #aaa;
+    border-radius: 3px;
+}
+
 #regForm,
 #recPassForm {
     display: none;
+}
+
+.parsley-required {
+    text-align: center;
+    position: absolute;
+    top: 16;
+    right: 30;
 }
 
 .message_field {
@@ -157,22 +204,67 @@
 }
 
 .logBox .newUserLinkBox {
-    margin: 10px auto;
+    margin: 20px auto;
     border-top: 1px solid #eee;
-    padding-top: 20px;
-    width: 70%;
+    padding-top: 0px;
+    width: 100%;
 }
 
-.logBox .newUserLinkBox p {
+.cover_not_available_for_mobile {
+    display: none;
+}
+
+@media screen and (max-width: 1024px) {
+    .cover_not_available_for_mobile {
+        display: block;
+        background-color: #FFCC66;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 2000;
+    }
+    .cover_not_available_for_mobile .coverCtn {
+        width: 50%;
+        margin: auto;
+        margin-top: 50%;
+        color: black;
+        text-align: center;
+    }
+    .cover_not_available_for_mobile .coverCtn h2 {
+        font-size: 4vw;
+    }
+}
+
+.logBox .newUserLinkBox ul {
+    list-style: none;
+    padding-left: 20;
+    padding-top: 14;
+}
+
+.logBox .newUserLinkBox ul li {
     text-align: center;
+    float: left;
+    padding-left: 25;
 }
 
-.logBox .newUserLinkBox p a {
-    color: #ccc;
+.logBox .newUserLinkBox ul li a {
+    color: black;
 }
 
-.logBox .newUserLinkBox p a:hover {
-    color: #333;
+.logBox .newUserLinkBox ul li a:hover {
+    text-decoration: underline;
+}
+
+.logBox .newUserLinkBox ul li {
+    color: black;
+}
+
+.logBox .newUserLinkBox ul li:hover {
+    text-decoration: underline;
 }
 
 .logBox .loginMess {

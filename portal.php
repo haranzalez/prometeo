@@ -34,7 +34,13 @@ body {
 </head>
 
 <body>
-    
+<div class="cover_not_available_for_mobile">
+        <div class="coverCtn">
+        <img src="img/logo_ppal.png" alt="">
+        <h2>Disculpe, esta aplicacion aun no esta disponible para trabajar desde un Smart o móvil</h2>
+        </div>
+        
+    </div>
     <!-- CREAR FOLDER MODAL -->    
     <!-- SELECT FOLDER MODAL -->
     <div id="formDialog">
@@ -123,27 +129,35 @@ body {
                 <div class="row">
                     
                     <div class="col-md-12" style="font-size:8pt;">
-                        <div style="padding:7px 15px; color:#444;">
-                            <h5 style="color:#222;font-size:11pt;margin-bottom:0px;"><i style="font-size:17pt;" class="fa fa-user-circle" aria-hidden="true"></i> <?php echo $user; ?></h5>
-                            <p style="padding-left:28px;margin-bottom:0px;"><?php echo $email; ?></p>
-                            <p style="padding-left:28px;">NIT: <?php echo $nit; ?></p>
+
+                        <div class="row" style="padding: 20 0 !important;">
+                            <div class="col-md-3"><i style="font-size: 2.7em;position: absolute;right: 15;" class="fa fa-user" aria-hidden="true"></i></div>
+                            <div class="col-md-9"> 
+                                <p style="margin-bottom:0px;border-bottom:1px solid #ddd;width:150px;"><b>Nombre Usuario:</b> <br/><spam class="client_info_name"></spam> <spam class="client_info_last_name"></spam></p>
+                                <p style="margin-bottom:0px;border-bottom:1px solid #ddd;width:150px;"><b>Cuenta asociada:</b> <br/><spam class="client_info_email"></spam></p>
+                                <p style="margin-bottom:0px;width:150px;"><b>Nit o Cédula asociado:</b> <br/><spam class="client_info_nit"></spam></p>
+                            </div>
                         </div>
-                        
+                           
+                           
+                            
                     </div>
+                        
                 </div>
+               
 
                 <ul class="cPannel">
                 
-                <li><a href="#" class="portalNavDocBtn" data-nav="2" data-empresa="documents" ><i class="fa fa-files-o" aria-hidden="true"></i>  Manejo de documentos</a></li>
+                <li><a href="" onclick="return false;" class="portalNavDocBtn" data-nav="2" data-empresa="documents" ><i class="fa fa-files-o" aria-hidden="true"></i>  Manejo de documentos</a></li>
                 <li><ul class="folderlist" style="list-style:none;"></ul></li>
-                <li><a href="#" type="button" class="portalNavEmpBtn genCertBtn" data-nav="1" data-empresa="empVinculadas"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>  Generar Certificado</a></li>
-                <li><a href="#" class="portalNavEmpInfoBtn" data-nav="1" data-empresa="empVinculadas"><i class="fa fa-building" aria-hidden="true"></i>  Empresas vinculadas</a></li>
+                <li><a href="" onclick="return false;" type="button" class="portalNavEmpBtn genCertBtn" data-nav="1" data-empresa="empVinculadas"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>  Generar Certificado</a></li>
+                <li><a href="" onclick="return false;" class="portalNavEmpInfoBtn" data-nav="1" data-empresa="empVinculadas"><i class="fa fa-building" aria-hidden="true"></i>  Empresas vinculadas</a></li>
                 
-                <li><a href="#" class="portalNavPqrsBtn"><i class="fa fa-question-circle" aria-hidden="true"></i>  PQRS</a></li>
+                <li><a href="" onclick="return false;" class="portalNavPqrsBtn"><i class="fa fa-question-circle" aria-hidden="true"></i>  PQRS</a></li>
                 </ul>
                
                  <ul class="cPannelBottom">
-                    <li><a href="#" class="portalNavCambiarDatosBtn"><i class="fa fa-id-card-o" aria-hidden="true"></i>  Cambiar datos</a></li>
+                    <li><a href="" onclick="return false;" class="portalNavCambiarDatosBtn"><i class="fa fa-id-card-o" aria-hidden="true"></i>  Cambiar datos</a></li>
                     <li><a href="portal.php?logout=true" class="logOutBtn"><i class="fa fa-power-off" aria-hidden="true"></i>  Salir</a></li>
                 </ul>
 
@@ -162,13 +176,14 @@ body {
            
         </div>
         <div style="text-align: center; padding:30px 0px;width:50%;margin:auto;bottom:0px;right:17%;position:absolute;">
-            <p style="color: #333">&copy;2017 Prometeo. Todos los derechos reservados.</p>
+            <p style="color: black">&copy;2017 Prometeo. Todos los derechos reservados.</p>
     </div>
              
     </div>
 
     
     <?php include 'includes/footer.inc.php';?>
+    <script type="text/javascript" src="js/portal.js"></script>
 
 </body>
 

@@ -216,11 +216,11 @@ require_once('../PDF/fpdf.php');
     
         function del_folder($fname)
         {
-            $sqlfiles = "DELETE FROM usrios_web_mnjo_flders_det WHERE email_usrio = '".$this->email."' AND nombre_folder = '".$fname."'";
+            $sqlfiles = "DELETE FROM usrios_web_mnjo_flders_det WHERE email_usrio = '".$this->email."' AND nmro_flder = '".$fname."'";
             $resFiles = $this->db->query($sqlfiles);
             if($resFiles)
             {
-                $sql = "DELETE FROM usrios_web_mnjo_flders_enc WHERE email_usrio = '".$this->email."' AND nmbre_flder = '".$fname."'";
+                $sql = "DELETE FROM usrios_web_mnjo_flders_enc WHERE email_usrio = '".$this->email."' AND nmro_flder = '".$fname."'";
                 $res = $this->db->query($sql);
                 if($res)
                 {
@@ -232,6 +232,25 @@ require_once('../PDF/fpdf.php');
             }
             
     
+        }
+        function edit_folder_name($name, $fnum)
+        {
+            $sql = "UPDATE usrios_web_mnjo_flders_enc SET nmbre_flder = '".$name."' WHERE email_usrio = '".$this->email."' AND nmro_flder = '".$fnum."'";
+            $res = $this->db->query($sql);
+            if($res){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        function move_file($fnum,$docid){
+            $sql = "UPDATE usrios_web_mnjo_flders_det SET nmro_flder = '".$fnum."' WHERE id_dcmnto = '".$docid."' AND email_usrio = '".$this->email."'";
+            $res = $this->db->query($sql);
+            if($res){
+                return true;
+            }else{
+                return false;
+            }
         }
         function encrypt($val)
         {

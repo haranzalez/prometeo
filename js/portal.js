@@ -3,7 +3,8 @@
  * Version BETA 
  * Hans Christian Aranzalez - <haranzalez@gmail.com>
  */
-
+init();
+client_info()
 folder_setup();
 //info_y_contacto_de_empresa();
 //FUNCIONES CORRELATIVAS
@@ -27,7 +28,20 @@ var siteURI = "http://www.sqlprometeo.com/";
 //FUNCIONES UI
 
 //NAVEGACION
-$('.portalNavEmpBtn').on('click', function() {
+
+$('.portalNavEmpBtn').button().on('click', function(e) {
+    e.preventDefault();
+    var dpb = $(this).attr('data-empresa');
+    if (dpb = 'empVinculadas') {
+        document.body.style.backgroundColor = '#FFCC66';
+        empresas_vinculadas('cert');
+
+        $('.slogan').fadeIn();
+        $('.logoPortal').fadeIn();
+    }
+});
+$('.fileContainer').button().on('click', '.portalNavEmpBtn', function(e) {
+    e.preventDefault();
     var dpb = $(this).attr('data-empresa');
     if (dpb = 'empVinculadas') {
         document.body.style.backgroundColor = '#FFCC66';
@@ -38,7 +52,8 @@ $('.portalNavEmpBtn').on('click', function() {
     }
 });
 
-$('.portalNavDocBtn').on('click', function() {
+$('.portalNavDocBtn').button().on('click', function(e) {
+    e.preventDefault();
     var dpb = $(this).attr('data-empresa');
     if (dpb = 'documents') {
         document.body.style.backgroundColor = '#FFCC66';
@@ -48,7 +63,8 @@ $('.portalNavDocBtn').on('click', function() {
         $('.logoPortal').fadeIn();
     }
 });
-$('.folderList').on('click', '.portalNavDocBtn', function() {
+$('.folderList').button().on('click', '.portalNavDocBtn', function(e) {
+    e.preventDefault();
     var dpb = $(this).attr('data-empresa');
     if (dpb = 'documents') {
         document.body.style.backgroundColor = '#FFCC66';
@@ -59,27 +75,31 @@ $('.folderList').on('click', '.portalNavDocBtn', function() {
     }
 });
 
-$('.portalNavCambiarDatosBtn').on('click', function() {
+$('.portalNavCambiarDatosBtn').button().on('click', function(e) {
+    e.preventDefault();
     clearAll();
     datos_usuario();
     $('.slogan').fadeIn();
     $('.logoPortal').fadeIn();
 });
-$('.portalNavEmpInfoBtn').on('click', function() {
+$('.portalNavEmpInfoBtn').button().on('click', function(e) {
+    e.preventDefault();
     clearAll();
     empresas_vinculadas('infoEmp');
     $('.slogan').fadeIn();
     $('.logoPortal').fadeIn();
 });
 
-$('.fileContainer').on('click', '.newDocumBtn', function() {
+$('.fileContainer').button().on('click', '.newDocumBtn', function(e) {
+    e.preventDefault();
     document.body.style.backgroundColor = '#FFCC66';
     empresas_vinculadas('cert');
 });
 //NAVEGACION END
 
 //DASH FUNCTIONS
-$('.dash').on('click', '.perCtner .period', function() {
+$('.dash').button().on('click', '.perCtner .period', function(e) {
+    e.preventDefault();
     $('.period i').hide();
     $(this).focus();
     $(this).find('i').show();
@@ -95,7 +115,8 @@ $('.dash').on('click', '.perCtner .period', function() {
     $('.generar_certificado_boton .guardarBtn').show();
 });
 
-$('.dash').on('click', '.formatoCtner .formato', function() {
+$('.dash').button().on('click', '.formatoCtner .formato', function(e) {
+    e.preventDefault();
     $('.formato i').hide();
     $(this).focus();
     $(this).find('i').show();
@@ -106,7 +127,8 @@ $('.dash').on('click', '.formatoCtner .formato', function() {
     $('.generar_certificado_boton .guardarBtn').attr('data-codform', $(this).attr('data-codigoFormato'));
 });
 
-$('.dash').on('click', '.empBox', function() {
+$('.dash').button().on('click', '.empBox', function(e) {
+    e.preventDefault();
     $('.empresas_contenedor').hide();
     generar_datos_de_empresa($(this), 'infoEmp');
     // $('.headerPortal').find('.logoPortal').hide();
@@ -116,7 +138,8 @@ $('.dash').on('click', '.empBox', function() {
 
 
 //GENERAR CERTIFICADO BTN
-$(".dash").on('click', '.datos_de_empresa .generar_certificado_boton .imprimirBtn', function() {
+$(".dash").button().on('click', '.datos_de_empresa .generar_certificado_boton .imprimirBtn', function(e) {
+    e.preventDefault();
     $('.generar_certificado_boton .imprimirBtn').html('<i style="font-size:18pt !important;" class="fa fa-refresh fa-spin fa-3x fa-fw"></i>');
     var formato = $(this).attr('data-codform');
     var mesini = $(this).attr('data-mesini');
@@ -126,19 +149,21 @@ $(".dash").on('click', '.datos_de_empresa .generar_certificado_boton .imprimirBt
 
 });
 
-$('.pdfBtn').on('click', function() {
+$('.pdfBtn').button().on('click', function(e) {
+    e.preventDefault();
     var html = document.getElementsByClassName('certificado')[0];
 
 });
 //GUARDAR CERTIFICADO
-$('.dash').on('click', '.datos_de_empresa .generar_certificado_boton .guardarBtn', function() {
+$('.dash').button().on('click', '.datos_de_empresa .generar_certificado_boton .guardarBtn', function(e) {
+    e.preventDefault();
     guardar_certificado();
 });
 
 //FUNCIONES MANEJO DE DOCUMENTOS
-$('.folderlist').button().on("click", '.mainFolderFileList .newFolderBtn', function() {
-
-    $('#formDialog form fieldset').html('<input type="text" placeholder="Escriba nombre" name="folderName" id="folderName" class="text ui-widget-content ui-corner-all"><input type="submit" tabindex="-1" style="position:absolute; top:-1000px">');
+$('.folderlist').button().on("click", '.mainFolderFileList .newFolderBtn', function(e) {
+    e.preventDefault();
+    $('#formDialog form fieldset').html('<p>Escriba nombre para nueva carpeta</p><input required data-parsley-required-message="Se nescesita un nombre." type="text" name="folderName" id="folderName" class="text ui-widget-content ui-corner-all"><input type="submit" tabindex="-1" style="position:absolute; top:-1000px">');
     dialog = $("#formDialog").dialog({
         autoOpen: false,
         height: 160,
@@ -161,39 +186,81 @@ $('.folderlist').button().on("click", '.mainFolderFileList .newFolderBtn', funct
         dialog.dialog("close");
     });
     dialog.dialog("open");
+
+    function crearFolder() {
+        var valid = dialog.find('form').parsley().validate();
+        if (valid) {
+            var data = dialog.find("form").serialize();
+            var iconStyle = 'font-size:25pt;color:darkred;float:left;';
+            console.log(data);
+            $.ajax({
+                async: true,
+                type: 'get',
+                url: 'src/controler.php?req=newFold&' + data,
+                success: function(res) {
+                    if (res == 1) {
+                        dialog.dialog("close");
+                        renderFiles('cp');
+                        open_folder('Bandeja de entrada');
+                    } else {
+                        $('#dialog-message').html('<spam style="' + iconStyle + '" class="fa fa-times-circle-o" aria-hidden="true"></spam><p class="dialog_mess">Folder ya existe.</p>');
+                        $("#dialog-message").dialog({
+                            modal: true,
+                            title: 'Atencion',
+                            buttons: {
+                                Ok: function() {
+                                    $(this).dialog("close");
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+    }
 });
 
-$('.folderlist').on('click', '.folderBtn', function() {
+$('.folderlist').button().on('click', '.folderBtn', function(e) {
+    e.preventDefault();
     var data = $(this).attr('data-folder');
     open_folder(data);
 });
 
-$('.fileContainer').on('click', '.folderBtn', function() {
+$('.fileContainer').button().on('click', '.folderBtn', function(e) {
+    e.preventDefault();
     var data = $(this).attr('data-folder');
 
     open_folder(data);
 });
 
-$('.fileContainer').on('click', '.delfile', function() {
-    var folder = $(this).attr('data-folder');
+$('.fileContainer').button().on('click', '.delfile', function(e) {
+    e.preventDefault();
+    var fname = $(this).attr('data-fname');
+    var fnum = $(this).attr('data-fnum');
     var docid = $(this).attr('data-docid');
-    console.log(folder);
-    del_file(folder, docid);
+
+    del_file(fnum, fname, docid);
 });
 
-$('.folderList').on('click', '.toggleFolderListBtn', function() {
+$('.folderList').button().on('click', '.toggleFolderListBtn', function(e) {
+    e.preventDefault();
     $('.folderList').find('.mainFolderFileList').show();
 });
 
-$('.cambiarDatosFormCtnr').on('click', '.edit', function(e) {
+$('.cambiarDatosFormCtnr').button().on('click', '.edit', function(e) {
+    e.preventDefault();
     var field = $(this).attr('data-field');
     var col = $(this).attr('data-col');
     var id = $(this).attr('data-cid');
-    var mess = "<p>Para cambiar su " + field + " entre su nueva informacion en el campo de abajo. Si cambia de opinion, oprima cancelar.</p>";
-    $('#formDialog form fieldset').html('<input placeholder="Escriba nuevo ' + field + '" type="text" name="' + col + '" class="text ui-widget-content ui-corner-all"><input type="submit" tabindex="-1" style="position:absolute; top:-1000px">');
+    var mess = "<p>Entre su nuevo " + field + ".</p>";
+    var dialHeight = 160;
+    $('.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset').css('margin-top', '.7em');
+
+    $('#formDialog form fieldset').html(mess + '<input required data-parsley-required-message="Se requiere su nuevo ' + field + '." type="text" name="' + col + '" class="text ui-widget-content ui-corner-all"><input type="submit" tabindex="-1" style="position:absolute; top:-1000px">');
     dialog = $("#formDialog").dialog({
         autoOpen: false,
-        height: 160,
+        height: dialHeight,
         width: 350,
         title: 'Editando ' + field,
         modal: true,
@@ -202,7 +269,7 @@ $('.cambiarDatosFormCtnr').on('click', '.edit', function(e) {
                 var newd = $("#formDialog form").serialize();
                 console.log(newd);
                 editar_dato_usuario(newd, id);
-                dialog.dialog("close");
+
             },
             "Cancelar": function() {
                 dialog.dialog("close");
@@ -215,28 +282,102 @@ $('.cambiarDatosFormCtnr').on('click', '.edit', function(e) {
     });
     dialog.dialog("open");
 
+    function editar_dato_usuario(data, id) {
+        var valid = dialog.find('form').parsley().validate();
+        if (valid) {
+            dialog.dialog("close");
+            $('.loadingCtn').show();
+            var newd = data.split('=');
+            var s = newd[0] + "='" + newd[1] + "'";
+
+            var obj = { key: newd[0], d: newd[1], field: s };
+            $.ajax({
+                async: true,
+                type: 'post',
+                data: { obj: JSON.stringify(obj) },
+                url: 'src/controler.php?req=edituser',
+                success: function(res) {
+                    console.log(res);
+                    if (res == 1) {
+                        if (obj.key == 'client_name' || obj.key == 'client_lastname' || obj.key == 'client_email') {
+                            client_info();
+                        }
+                        $('.loadingCtn').fadeOut();
+                        var iconStyle = 'font-size:18pt;color:green;float:left;';
+                        $('#dialog-message').html('<spam style="' + iconStyle + '" class="fa fa-thumbs-up" aria-hidden="true"></spam><p class="dialog_mess"> Su información Ha sido Actualizada exitosamente!</p>');
+                        $("#dialog-message").dialog({
+                            modal: true,
+                            title: 'Exito!',
+                            buttons: {
+                                Ok: function() {
+                                    // if (obj.key == 'client_cedula' || obj.key == 'client_email') {
+                                    //     $(this).dialog("close");
+                                    //     $('.loadingCtn p').text('Cerrando sesión');
+                                    //     $('.loadingCtn').show();
+                                    //     setTimeout(function() {
+                                    //         var url = window.location.href;
+                                    //         console.log(url);
+                                    //         if (url.indexOf('?') > -1) {
+                                    //             url += '&param=1'
+                                    //         } else {
+                                    //             if (url.charAt[-1] == '#') {
+                                    //                 url.substring(0, url.length - 1);
+                                    //             }
+                                    //             url += '?logout=true'
+                                    //         }
+                                    //         window.location.href = url;
+                                    //     }, 3000);
+
+                                    // } else {
+
+                                    client_info()
+                                    datos_usuario();
+                                    location.reload();
+
+                                    $(this).dialog("close");
+                                    //}
+
+                                }
+                            }
+                        });
+
+                    }
+
+
+                }
+            });
+        }
+
+
+
+    }
+
 
 });
 
 $('.cambiarDatosFormCtnr').on('click', '.ctn .cambiarClaveBtn', function() {
-    var inputStyle = "margin-bottom:5px;display:block;width:100%;padding:7px;";
-    $('#formDialog form fieldset').html('<p>Para cambiar su clave, porfavor llene los siguientes campos.</p>' +
-        '<input style="' + inputStyle + '" placeholder="Su clave reciente" type="password" name="oldpass" class="text ui-widget-content ui-corner-all">' +
-        '<input style="' + inputStyle + '" type="password" placeholder="Su NUEVA clave" name="newpass" class="text ui-widget-content ui-corner-all">' +
-        '<input style="' + inputStyle + '" type="password" placeholder="Reingresar NUEVA clave" name="newpassconfi" class="text ui-widget-content ui-corner-all">' +
+    var inputStyle = "";
+    $('#formDialog form fieldset').html('<p>Porfavor llene los siguientes campos</p>' +
+        '<input required data-parsley-required-message="Su clave reciente es nescesaria." style="' + inputStyle + '" placeholder="Su clave reciente" type="password" name="oldpass" class="text ui-widget-content ui-corner-all">' +
+        '<input id="editDatosPass" required data-parsley-required-message="Su nueva clave es nescesaria." style="' + inputStyle + '" type="password" placeholder="Su NUEVA clave" name="newpass" class="text ui-widget-content ui-corner-all">' +
+        '<input required data-parsley-required-message="Confirme su nueva contraseña." data-parsley-equalto="#editDatosPass"	 style="' + inputStyle + '" type="password" placeholder="Reingresar NUEVA clave" name="newpassconfi" class="text ui-widget-content ui-corner-all">' +
         '<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">');
     dialog = $("#formDialog").dialog({
         autoOpen: false,
         height: 260,
         width: 350,
-        title: 'Cambio de clave',
+        title: 'Cambio de contraseña',
         modal: true,
         buttons: {
             "Cambiar": function() {
-                var newd = $("#formDialog form").serialize();
-                console.log(newd);
-                cambiar_clave(newd);
-                dialog.dialog("close");
+                var valid = dialog.find('form').parsley().validate();
+                if (valid) {
+                    cambiar_clave();
+                    dialog.dialog("close");
+                }
+                console.log(valid);
+
+
             },
             Cancel: function() {
                 dialog.dialog("close");
@@ -248,6 +389,53 @@ $('.cambiarDatosFormCtnr').on('click', '.ctn .cambiarClaveBtn', function() {
         }
     });
     dialog.dialog("open");
+
+    function cambiar_clave() {
+        var newpassdata = dialog.find('form').serialize();
+        console.log(newpassdata);
+        $('.loadingCtn').show();
+        $.ajax({
+            async: true,
+            type: 'post',
+            data: newpassdata,
+            url: 'src/controler.php?req=changepass',
+            success: function(res) {
+                console.log(res);
+                if (res == true) {
+                    $('.loadingCtn').fadeOut();
+                    var iconStyle = 'font-size:18pt;color:green;float:left;';
+                    $('#dialog-message').html('<spam style="' + iconStyle + '" class="fa fa-thumbs-up" aria-hidden="true"></spam><p class="dialog_mess"> Su clave se ah actualizado exitosamente! Un mensaje se ah enviado a su correo electronico confirmando sus cambios.</p>');
+                    $("#dialog-message").dialog({
+                        modal: true,
+                        title: 'Exito!',
+                        buttons: {
+                            Ok: function() {
+                                datos_usuario()
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+
+                } else {
+                    $('.loadingCtn').fadeOut();
+                    var iconStyle = 'font-size:18pt;color:darkred;float:left;';
+                    $('#dialog-message').html('<spam style="' + iconStyle + '" class="fa fa-times" aria-hidden="true"></spam><p class="dialog_mess"> Su clave reciente no es correcta. Porfavor trate de nuevo.</p>');
+                    $("#dialog-message").dialog({
+                        modal: true,
+                        title: 'Atencion!',
+                        buttons: {
+                            Ok: function() {
+                                datos_usuario()
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+
+    }
 });
 
 
@@ -255,6 +443,10 @@ $('.cambiarDatosFormCtnr').on('click', '.ctn .cambiarClaveBtn', function() {
 
 /*************** FUNCIONES **********************/
 //FUNCIONES COMPLEMENTARIAS
+function init() {
+
+}
+
 function hexToBase64(rstr) {
 
     if (rstr != false) {
@@ -265,6 +457,7 @@ function hexToBase64(rstr) {
     }
 
 }
+
 
 function tdate() {
     var today = new Date();
@@ -339,7 +532,7 @@ function encrypt(val) {
 function empresas_vinculadas(type) {
 
     if (type == 'cert') {
-        $('.dash .empresas_contenedor .secTitle').text('Seleccione un empresa para empezar');
+        $('.dash .empresas_contenedor .secTitle').text('Seleccione una empresa para empezar');
     } else if (type == 'infoEmp') {
         $('.dash .empresas_contenedor .secTitle').text('Empresas vinculadas');
     }
@@ -356,11 +549,12 @@ function empresas_vinculadas(type) {
             console.log(d);
             if (d.length > 0) {
                 for (var i = 0; i < d.length; i++) {
-                    console.log(d[i]);
+                    console.log(d[i].nmbre_dpto);
                     var img = 'data:image/jpeg;base64,' + hexToBase64(d[i].lgtpo_emprsa);
+
                     var html = '<div class="row">' +
                         '<div class="col-md-12 empBox " data-infoType="' + type + '"><div class="row">' +
-                        '<div class="col-md-1"><img src="' + img + '"></div><div class="col-md-11"><p class="nitEmp" data-razonSocial="' + d[i].nmbre_rzon_scial + '" data-nit="' + d[i].id_emprsa + '" data-color="' + d[i].cdgo_color + '"><b>' + d[i].nmbre_rzon_scial + '</b>' +
+                        '<div class="col-md-1"><div class="emVincImg" style="background-image:url(' + img + ')"></div></div><div class="col-md-11"><p class="nitEmp" data-razonSocial="' + d[i].nmbre_rzon_scial + '" data-nit="' + d[i].id_emprsa + '" data-color="' + d[i].cdgo_color + '"><b>' + d[i].nmbre_rzon_scial + '</b>' +
                         ' | NIT: ' + d[i].id_emprsa.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + ' | ' + d[i].drccion + ', ' + d[i].nmbre_mncpio + ', ' + d[i].nmbre_pais + ' | ' + d[i].web_site + '</p></div>' +
 
                         '</div>' +
@@ -430,7 +624,7 @@ function generar_datos_de_empresa(el) {
             '<div class="col-md-12">' +
             '<div class="row">' +
             '<div class="col-md-6"><strong>Razón Social:</strong></div>' +
-            '<div class="col-md-6 nombre_empresa"> ' + $(el).find('.nitEmp').attr('data-razonSocial').replace(/\w\S*/g, function(txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); }) + '</div>' +
+            '<div class="col-md-6 nombre_empresa"> ' + $(el).find('.nitEmp').attr('data-razonSocial') + '</div>' +
             '</div>' +
             '<div class="row">' +
             '<div class="col-md-6"><strong>NIT:</strong></div>' +
@@ -451,27 +645,27 @@ function generar_datos_de_empresa(el) {
             '<div class="row formato_periodo_empresa">' +
             '<div class="col-md-12 ">' +
             '<div class="formatoPerTbl">' +
-            '<h4 class="secH4">Formatos disponibles</h4>' +
+            '<h4 class="secH4">Ceritificados disponibles<br/><small>Seleccione el formato</small></h4>' +
             '<div class="formatoCtner"></div>' +
             '</div>' +
             '</div>' +
             '<div class="col-md-12">' +
             '<div class="formatoPerTbl">' +
-            '<h4 class="secH4">Períodos disponibles</h4>' +
+            '<h4 class="secH4">Períodos disponibles<br/><small>Seleccione un periodo</small></h4>' +
             '<div class="perCtner"><div class="selFormatoMess"><i class="fa fa-warning" aria-hidden="true"></i> Seleccione formato</div></div>' +
             '</div>' +
             '</div>' +
             '</div>' +
 
             '<div class="generar_certificado_boton">' +
-            '<h4 style="color:#ccc;text-align:center;">Generar Certificado</h4>' +
+            '<h4 style="color:black;text-align:center;">Generar Certificado</h4>' +
             '<div class="selPerMess"><i class="fa fa-warning" aria-hidden="true"></i> Seleccione periodo</div>' +
-            '<div class="row" style="width:25%;margin:auto !important;">' +
+            '<div class="row" style="width:60%;margin:auto !important;">' +
 
             '<div class="col-md-6" >' +
-            '<div style="text-align:center;">' +
+            '<div style="text-align:right;">' +
             '<form id="pdfFrm" target="_blank" action="PDF/pdfout.php" method="post">' +
-            '<button type="submit" title="PDF" class="pdfBtn"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></button>' +
+            '<button type="submit" title="PDF" class="pdfBtn">Ver Certificado <i class="fa fa-file-pdf-o" aria-hidden="true"></i></button>' +
             '<input type="hidden" name="img" value="' + hexToBase64(imgData) + '">' +
             '<input type="hidden" name="formato" value="">' +
             '<input type="hidden" name="mesini" value="">' +
@@ -482,9 +676,9 @@ function generar_datos_de_empresa(el) {
             '</div>' +
 
             '<div class="col-md-6">' +
-            '<div style="text-align:center;width:95%;">' +
+            '<div style="text-align:center;">' +
             '<form id="saveFrm" method="post">' +
-            '<button type="button" title="Guardar" class="guardarBtn"><i class="glyphicon glyphicon-floppy-disk"></i></button>' +
+            '<button type="button" title="Guardar" class="guardarBtn">Guardar Certificado <i class="glyphicon glyphicon-floppy-disk"></i></button>' +
             '<input type="hidden" name="img" value="' + hexToBase64(imgData) + '">' +
             '<input type="hidden" name="formato" value="">' +
             '<input type="hidden" name="mesini" value="">' +
@@ -519,7 +713,7 @@ function generar_datos_de_empresa(el) {
             '<p><b>Nombre razón social</b></p>' +
             '</div>' +
             '<div class="col-md-8">' +
-            '<p>' + $(el).find('.nitEmp').attr('data-razonSocial').replace(/\w\S*/g, function(txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); }) + '</p>' +
+            '<p>' + $(el).find('.nitEmp').attr('data-razonSocial') + '</p>' +
             '</div>' +
             '</div>' +
 
@@ -599,7 +793,7 @@ function generar_datos_de_empresa(el) {
             '<p><b>Teléfono Fijo</b></p>' +
             '</div>' +
             '<div class="col-md-8">' +
-            '<p>' + $(el).find('.telEmpresa').val() + '</p>' +
+            '<p>' + $(el).find('.telEmpresa').val().replace(/(\d{3})(\d{3})(\d{4})/, '$1 $2 $3') + '</p>' +
             '</div>' +
             '</div>' +
 
@@ -608,7 +802,7 @@ function generar_datos_de_empresa(el) {
             '<p><b>Teléfono Móvil</b></p>' +
             '</div>' +
             '<div class="col-md-8">' +
-            '<p>' + $(el).find('.mobilEmpresa').val() + '</p>' +
+            '<p>' + $(el).find('.mobilEmpresa').val().replace(/(\d{3})(\d{3})(\d{4})/, '$1 $2 $3') + '</p>' +
             '</div>' +
             '</div>' +
 
@@ -754,7 +948,7 @@ function generar_certificado(formato, mesini, mesfin, nit_empresa) {
 }
 
 function guardar_certificado() {
-
+    var fname = '';
     $.ajax({
         async: true,
         type: "get",
@@ -766,6 +960,7 @@ function guardar_certificado() {
             var html = '<p>Porfavor seleccione un folder para guardar certificado.</p><select name="folderList" form="carform">';
             $('.file').remove();
             for (var key in d) {
+
                 var last4 = key.substr(key.length - 4);
 
                 if (last4.charAt(0) != '.') {
@@ -809,7 +1004,7 @@ function guardar_certificado() {
         var data = $('#saveFrm').serialize();
         var iconStyle = 'font-size:18pt;color:green;float:left;';
         var f = dialog.find('form').find('select').val();
-        console.log(f);
+
         $.ajax({
             async: true,
             type: "post",
@@ -838,11 +1033,11 @@ function guardar_certificado() {
 var doc_data = '';
 
 
-
-
-
-
-
+$('.folderList').on('blur', '.mainFolderFileList input[type="text"]', function() {
+    console.log('out');
+    $(this).attr('readOnly', 'true');
+    $(this).addClass('folderNameImput');
+});
 
 function renderFiles(elm) {
     if (elm == 'cp') {
@@ -855,6 +1050,7 @@ function renderFiles(elm) {
             url: "src/controler.php?req=files",
             success: function(res) {
                 var d = JSON.parse(res);
+                console.log(d);
                 //doc_data = d;
                 var styleDocTile = 'border-radius:3px;background-color:rgba(3,3,3,.5);padding:20px;font-size:8pt;height:130px;box-shadow:0px 0px 5px #ccc;';
                 var styleDocCols = 'color:white;text-align:center;padding:6px !important;position:relative !important;';
@@ -869,7 +1065,18 @@ function renderFiles(elm) {
                     //html = html+'<ul class="fileList">';
 
                     for (var key in d) {
-                        html2 = html2 + '<li><a class="folderBtn" href="#" data-folder="' + key + '" style="' + flistStyle + '"><i style="font-size:9pt;" class="fa fa-folder-o" aria-hidden="true"></i>  ' + key + '</a></li>';
+
+                        html2 = html2 + '<li class="dragLi" draggable="true">' +
+
+                            '<i style="font-size:9pt;" class="fa fa-folder-o" aria-hidden="true">' +
+                            '</i>   <a class="folderBtn" href="#" data-folder="' + key + '" style="' + flistStyle + '" readonly="true" ondblclick="this.readOnly="";" type="text">' + key + '</a>';
+                        if (key == 'Bandeja de entrada') {
+                            html2 = html2 + '';
+                        } else {
+                            html2 = html2 + '<i class="fa fa-times delFolderBtn" data-fname="' + key + '" data-fnumber="' + d[key]['folder_number'] + '" aria-hidden="true"></i>';
+                        }
+
+                        html2 = html2 + '</li>';
                     }
                     html2 = html2 + '</ul><button class="newFolderBtn">Crear Folder</button></li>';
                 }
@@ -914,55 +1121,89 @@ function folder_setup() {
     });
 }
 
-function crearFolder() {
-    var data = dialog.find("form").serialize();
-    var iconStyle = 'font-size:25pt;color:darkred;float:left;';
-    console.log(data);
-    $.ajax({
-        async: true,
-        type: 'get',
-        url: 'src/controler.php?req=newFold&' + data,
-        success: function(res) {
-            if (res == 1) {
+
+
+$('.fileContainer').on('click', '.editFolderNameBtn', function() {
+    var fname = $(this).attr('data-fname');
+    var fnum = $(this).attr('data-fnum');
+    editFoldername(fnum, fname);
+})
+
+function editFoldername(fnum, fname) {
+    var mess = "<p>Entre nuevo nombre</p>";
+    $('#formDialog form fieldset').html(mess + '<input required data-parsley-required-message="Se nescesita un nombre." type="text" name="folderName" class="text ui-widget-content ui-corner-all"><input type="submit" tabindex="-1" style="position:absolute; top:-1000px">');
+    dialog = $("#formDialog").dialog({
+        autoOpen: false,
+        height: 160,
+        width: 350,
+        title: 'Editando ' + fname,
+        modal: true,
+        buttons: {
+            "Cambiar": function() {
+
+                cambiar();
+
+            },
+            "Cancelar": function() {
                 dialog.dialog("close");
-                renderFiles('cp');
-                open_folder('Bandeja de entrada');
-            } else {
-                $('#dialog-message').html('<spam style="' + iconStyle + '" class="fa fa-times-circle-o" aria-hidden="true"></spam><p class="dialog_mess">Folder ya existe.</p>');
-                $("#dialog-message").dialog({
-                    modal: true,
-                    title: 'Atencion',
-                    buttons: {
-                        Ok: function() {
-                            $(this).dialog("close");
-                        }
-                    }
-                });
             }
+        },
+        close: function() {
+            form = dialog.find('form');
+            form[0].reset();
         }
     });
+    dialog.dialog("open");
+
+    function cambiar() {
+
+        var fname = $("#formDialog form").find('input[type="text"]').val();
+        var valid = dialog.find('form').parsley().validate();
+        console.log(valid);
+        if (valid) {
+            dialog.dialog("close");
+            console.log(fname);
+            $.ajax({
+                async: true,
+                type: "get",
+                url: "src/controler.php?req=editfol&fnum=" + fnum + "&folderName=" + fname,
+                success: function(res) {
+                    if (res == 1) {
+                        var iconStyle = 'font-size:25pt;color:darkgreen;float:left;';
+                        $('#dialog-message').html('<spam style="' + iconStyle + '" class="fa fa-check" aria-hidden="true"></spam><p class="dialog_mess">Su folder se a renombrado: <b>' + fname + '</b></p>');
+                        $("#dialog-message").dialog({
+                            modal: true,
+                            title: 'Folder Actualizado!',
+                            buttons: {
+                                Ok: function() {
+                                    renderFiles('cp');
+                                    open_folder(fname);
+                                    $(this).dialog("close");
+                                }
+                            }
+                        });
+
+                    } else {
+                        console.log(res);
+                    }
+
+
+                }
+            });
+        }
+
+
+    }
+
 }
 
 function open_folder(folder) {
-
+    $('.loadingCtn').show();
     clearAll();
     var linksUrl = siteURI + 'PDF/pdfout.php';
     var styleDocTile = 'border-radius:3px;background-color:rgba(3,3,3,.5);padding:20px;font-size:8pt;height:130px;box-shadow:0px 0px 5px #000;';
     var styleDocCols = 'color:white;text-align:center;padding:6px !important;position:relative !important;';
-    var html = '<h4><i class="fa fa-folder-open" aria-hidden="true"></i>   ' + folder + '</h4><div class="row">';
-    html = html + '<div class="row docRowHeaders">' +
-        '<div class="col-md-1"><p><b>Doc ID</b></p></div>' +
 
-        '<div class="col-md-9 ">' +
-        '<div  >' +
-        '<p><b>Asunto</b></p>' +
-        '</div>' +
-        '</div>' +
-
-        '<div class="col-md-1"><p><b>Fecha</b></p></div>' +
-
-        '<div class="col-md-1"></div>' +
-        '</div>';
     $.ajax({
         async: true,
         type: "get",
@@ -971,11 +1212,35 @@ function open_folder(folder) {
 
             var d = JSON.parse(res);
             var doc_data = d;
+            var fnum = doc_data[folder]['folder_number'];
+
+            delete doc_data[folder]['folder_number'];
+            var html = '<div class="row"><div class="col-md-10"><h4><i class="fa fa-folder-open" aria-hidden="true"></i>   ' + folder + '</h4></div><div class="col-md-2">';
+            if (folder == 'Bandeja de entrada') {
+                html = html + '';
+            } else {
+                html = html + '<div style="margin-top: 15;"><spam style="padding-right:7px;"><b>Renombrar Carpeta</b></spam><button data-fname="' + folder + '" data-fnum="' + fnum + '" class="editFolderNameBtn"><i class="fa fa-pencil" aria-hidden="true"></i></button></div>';
+            }
+            html = html + '</div></div><div class="row">';
+            html = html + '<div class="row docRowHeaders">' +
+                '<div class="col-md-1"><p><b>Doc ID</b></p></div>' +
+
+                '<div class="col-md-8 ">' +
+                '<div>' +
+                '<p><b>Asunto</b></p>' +
+                '</div>' +
+                '</div>' +
+
+                '<div class="col-md-1"><p><b>Fecha</b></p></div>' +
+
+                '<div class="col-md-1"><p style="text-align: right;"><b>Borrar</b></p></div>' +
+                '<div class="col-md-1"><p style="padding-left: 7;"><b>Mover</b></p></div>' +
+                '</div>';
 
             var arr = [];
 
             console.log(Object.keys(doc_data[folder]).length);
-            delete doc_data[folder]['folder_number'];
+
             console.log(doc_data[folder]);
             if (Object.keys(doc_data[folder]).length > 0) {
                 for (var key in doc_data[folder]) {
@@ -986,15 +1251,16 @@ function open_folder(folder) {
                     html = html + '<div class="row docRow">' +
                         '<div class="col-md-1"><p>' + idf[0] + '</p></div>' +
 
-                        '<div class="col-md-9 ">' +
+                        '<div class="col-md-8 ">' +
                         '<p>' +
                         '<a style="color:#333;" target="blank" href="' + linksUrl + '?docid=' + idf[0] + '">' +
-                        '<i style="font-size:15pt;color:darkred;" class="fa fa-file-pdf-o" aria-hidden="true"></i>       ' + linkText + '</a>' +
+                        '<i style="font-size:10pt;color:darkred;" class="fa fa-file-pdf-o" aria-hidden="true"></i>        ' + linkText + '</a>' +
                         '</p>' +
                         '</div>' +
 
                         '<div class="col-md-1"><p>' + idf[1] + '</p></div>' +
-                        '<div class="col-md-1"><i title="Borrar Documento" class="fa fa-trash delfile" data-folder="' + folder + '" data-docid="' + idf[0] + '" aria-hidden="true" ></i></div>' +
+                        '<div style="text-align:right;" class="col-md-1"><i title="Borrar Documento" class="fa fa-trash delfile" data-fnum="' + fnum + '" data-fname="' + folder + '" data-docid="' + idf[0] + '" aria-hidden="true" ></i></div>' +
+                        '<div style="text-align:left;" class="col-md-1"><i title="Mover Documento" class="fa fa-arrow-right movefile" data-fnum="' + fnum + '" data-fname="' + folder + '" data-docid="' + idf[0] + '" aria-hidden="true" ></i></div>' +
                         '</div>';
 
 
@@ -1009,6 +1275,7 @@ function open_folder(folder) {
 
             $('.fileContainer').append(html);
             $('.fileContainer').fadeIn();
+            $('.loadingCtn').fadeOut();
         }
 
 
@@ -1016,16 +1283,21 @@ function open_folder(folder) {
 
     });
 }
+$('.folderlist').on('click', '.mainFolderFileList ul li .delFolderBtn', function() {
+    var fnum = $(this).attr('data-fnumber');
+    var fname = $(this).attr('data-fname');
+    del_file(fnum, fname, null);
+});
 
-function del_file(folder, file) {
+function del_file(fnum, fname, file) {
 
     var fileUrl = '';
-    console.log(folder, file);
+
     //Para borrar folder
-    if (file == undefined && folder != '') {
-        var mes = 'El folder <b>' + folder + '</b> y todo su contenido sera permanente borrado. Esta operacion NO es reverzible. Desea continuar?';
+    if (file == null && fnum != '' && fname != '') {
+        var mes = 'El folder <b>' + fname + '</b> y todo su contenido sera permanente borrado. Esta operacion NO es reverzible. Desea continuar?';
         $('#dialogo_confirmacion .confirmacion_mensaje').html(mes);
-        console.log(folder);
+
         $("#dialogo_confirmacion").dialog({
             resizable: false,
             height: "auto",
@@ -1033,16 +1305,17 @@ function del_file(folder, file) {
             modal: true,
             title: 'Esta seguro?',
             buttons: {
-                "Borrar documento": function() {
+                "Borrar folder": function() {
                     var iconStyle = 'font-size:18pt;color:green;float:left;';
 
                     $.ajax({
                         async: true,
                         type: 'get',
-                        url: 'src/controler.php?req=deldir&folderName=' + folder,
+                        url: 'src/controler.php?req=deldir&folderName=' + fnum,
                         success: function(res) {
                             if (res == 1) {
                                 renderFiles('cp');
+                                open_folder('Bandeja de entrada');
                                 $('#dialog-message').html('<spam style="' + iconStyle + '" class="fa fa-thumbs-up" aria-hidden="true"></spam><p class="dialog_mess">Folder borrado exitosamente!</p>');
                                 $("#dialog-message").dialog({
                                     modal: true,
@@ -1066,7 +1339,7 @@ function del_file(folder, file) {
         });
         //Para borrar documento
     } else {
-        var mes = 'El documento <b style="font-size:8pt !important;">' + file + '</b> sera permanente borrado de la carpeta ' + folder + '. Esta operacion NO es reverzible. Desea continuar?';
+        var mes = 'El documento <b style="font-size:8pt !important;">' + file + '</b> sera permanente borrado de la carpeta ' + fname + '. Esta operacion NO es reverzible. Desea continuar?';
         $('#dialogo_confirmacion .confirmacion_mensaje').html(mes);
 
         $("#dialogo_confirmacion").dialog({
@@ -1084,8 +1357,8 @@ function del_file(folder, file) {
                         type: 'get',
                         url: 'src/controler.php?req=delfile&docid=' + file,
                         success: function(res) {
-                            console.log(folder)
-                            if (res == 1 && folder == 1) {
+
+                            if (res == 1 && fnum == 1) {
                                 open_folder('Bandeja de entrada');
                                 $('#dialog-message').html('<spam style="' + iconStyle + '" class="fa fa-thumbs-up" aria-hidden="true"></spam><p class="dialog_mess">Documento borrado exitosamente!</p>');
                                 $("#dialog-message").dialog({
@@ -1099,7 +1372,7 @@ function del_file(folder, file) {
                                 });
                                 $('.loadingCtn').fadeOut();
                             } else {
-                                open_folder(folder);
+                                open_folder(fname);
                                 $('#dialog-message').html('<spam style="' + iconStyle + '" class="fa fa-thumbs-up" aria-hidden="true"></spam><p class="dialog_mess">Documento borrado exitosamente!</p>');
                                 $("#dialog-message").dialog({
                                     modal: true,
@@ -1129,6 +1402,114 @@ function del_file(folder, file) {
 
 }
 
+$('.fileContainer').on('click', '.docRow .movefile', function() {
+    var docid = $(this).attr('data-docid');
+    $.ajax({
+        async: true,
+        type: "get",
+        url: "src/controler.php?req=files",
+        success: function(res) {
+
+            var d = JSON.parse(res);
+            console.log(d);
+            var html = '<p>Porfavor seleccione un folder de destino.</p><select name="folderList" form="carform">';
+            $('.file').remove();
+            for (var key in d) {
+
+                var last4 = key.substr(key.length - 4);
+
+                if (last4.charAt(0) != '.') {
+                    html = html + '<option value="' + key + '_' + d[key]['folder_number'] + '"><i class="fa fa-folder"></i>' + key + '</option>';
+                } else {
+                    console.log(key);
+                }
+
+            }
+            html = html + '</select><input type="submit" tabindex="-1" style="position:absolute; top:-1000px">';
+            $('#formDialog form fieldset').html(html);
+
+            dialog = $("#formDialog").dialog({
+                autoOpen: false,
+                height: 190,
+                width: 350,
+                title: 'Cambio de folder',
+                modal: true,
+                buttons: {
+                    "Mover Documento": move_file,
+                    Cancel: function() {
+                        dialog.dialog("close");
+                    }
+                },
+                close: function() {
+                    form[0].reset();
+                }
+            });
+            form = dialog.find("form").on("submit", function(event) {
+                event.preventDefault();
+                move_file();
+
+                dialog.dialog("close");
+            });
+            dialog.dialog("open");
+
+            function move_file() {
+                dialog.dialog("close");
+                var data = dialog.find('form').find('select').val();
+                var split = data.split('_');
+                var fname = split[0];
+                var fnum = split[1];
+
+                console.log(fnum, fname);
+                var mes = 'El documento <b>' + docid + '</b> sera movido a la carpeta <b>' + fname + '</b>. Desea continuar?';
+                $('#dialogo_confirmacion .confirmacion_mensaje').html(mes);
+
+                $("#dialogo_confirmacion").dialog({
+                    resizable: false,
+                    height: "auto",
+                    width: 350,
+                    modal: true,
+                    title: 'Esta seguro?',
+                    buttons: {
+                        "OK": function() {
+                            var iconStyle = 'font-size:18pt;color:green;float:left;';
+
+                            $.ajax({
+                                async: true,
+                                type: 'get',
+                                url: 'src/controler.php?req=movef&folderName=' + fnum + '&docid=' + docid,
+                                success: function(res) {
+                                    console.log(res);
+                                    if (res == 1) {
+                                        open_folder(fname);
+                                        $('#dialog-message').html('<spam style="' + iconStyle + '" class="fa fa-thumbs-up" aria-hidden="true"></spam><p class="dialog_mess">Documento movido exitosamente!</p>');
+                                        $("#dialog-message").dialog({
+                                            modal: true,
+                                            title: 'Exito!',
+                                            buttons: {
+                                                Ok: function() {
+                                                    $(this).dialog("close");
+                                                }
+                                            }
+                                        });
+
+                                    }
+                                }
+                            });
+                            $(this).dialog("close");
+                        },
+                        "Cancelar": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            }
+
+        }
+    });
+
+
+});
+
 //FUNCIONES DATOS DE USUARIO
 function datos_usuario() {
     $('.loadingCtn').show();
@@ -1141,33 +1522,30 @@ function datos_usuario() {
         success: function(res) {
             var d = JSON.parse(res);
             var istyle = "float:right;";
-            var html = '<h4>Datos de cuenta</h4><div class="ctn"><div class="row">' +
+            var html = '<h4 style="text-align:center;">Información de Registro</h4><div class="ctn"><div class="row">' +
                 '<div class="col-md-6"><div>Nombre</div></div>' +
-                '<div class="col-md-6"><div class="row"><div class="col-md-9"><p>' + d['client_name'] + '</p></div><div class="col-md-3"><i data-field="Nombre" data-col="client_name" data-cid="' + d['client_id'] + '" class="fa fa-pencil edit" aria-hidden="true"></i></div></div></div>' +
+                '<div class="col-md-6"><div class="row"><div class="col-md-9"><p>' + d['client_name'] + '</p></div><div class="col-md-3"><b style="padding-rigth:5;">Modificar</b> <i data-field="Nombre" data-col="client_name" data-cid="' + d['client_id'] + '" class="fa fa-pencil edit" aria-hidden="true"></i></div></div></div>' +
                 '</div>' +
                 '<div class="row">' +
                 '<div class="col-md-6"><div>Apellido</div> </div>' +
-                '<div class="col-md-6"><div class="row"><div class="col-md-9"><p>' + d['client_lastname'] + '</p></div><div class="col-md-3"><i data-field="Apellido" data-col="client_lastname" data-cid="' + d['client_id'] + '" class="fa fa-pencil edit" aria-hidden="true"></i></div></div></div>' +
+                '<div class="col-md-6"><div class="row"><div class="col-md-9"><p>' + d['client_lastname'] + '</p></div><div class="col-md-3"><b style="padding-rigth:5;">Modificar</b> <i data-field="Apellido" data-col="client_lastname" data-cid="' + d['client_id'] + '" class="fa fa-pencil edit" aria-hidden="true"></i></div></div></div>' +
                 '</div>' +
                 '<div class="row">' +
                 '<div class="col-md-6"><div>Teléfono Fijo</div> </div>' +
-                '<div class="col-md-6"><div class="row"><div class="col-md-9"><p>' + d['client_phone'] + '</p></div><div class="col-md-3"><i data-field="Telefono Fijo" data-col="client_phone" data-cid="' + d['client_id'] + '" class="fa fa-pencil edit" aria-hidden="true"></i></div></div></div>' +
+                '<div class="col-md-6"><div class="row"><div class="col-md-9"><p>' + d['client_phone'].replace(/(\d{3})(\d{3})(\d{4})/, '$1 $2 $3') + '</p></div><div class="col-md-3"><b style="padding-rigth:5;">Modificar</b> <i data-field="Telefono Fijo" data-col="client_phone" data-cid="' + d['client_id'] + '" class="fa fa-pencil edit" aria-hidden="true"></i></div></div></div>' +
                 '</div>' +
                 '<div class="row">' +
                 '<div class="col-md-6"><div>Teléfono Móvil</div></div>' +
-                '<div class="col-md-6"><div class="row"><div class="col-md-9"><p>' + d['client_mobil'] + '</p></div><div class="col-md-3"><i data-field="Telefono Movil" data-col="client_mobil" data-cid="' + d['client_id'] + '" class="fa fa-pencil edit" aria-hidden="true"></i></div></div></div>' +
+                '<div class="col-md-6"><div class="row"><div class="col-md-9"><p>' + d['client_mobil'].replace(/(\d{3})(\d{3})(\d{4})/, '$1 $2 $3') + '</p></div><div class="col-md-3"><b style="padding-rigth:5;">Modificar</b> <i data-field="Telefono Movil" data-col="client_mobil" data-cid="' + d['client_id'] + '" class="fa fa-pencil edit" aria-hidden="true"></i></div></div></div>' +
                 '</div>' +
+
                 '<div class="row">' +
-                '<div class="col-md-6"><div>Correo Electrónico</div></div>' +
-                '<div class="col-md-6"><div class="row"><div class="col-md-9"><p>' + d['client_email'] + '</p></div><div class="col-md-3"><i data-field="Correo Electronico" data-col="client_email" data-cid="' + d['client_id'] + '" class="fa fa-pencil edit" aria-hidden="true"></i></div></div></div>' +
-                '</div>' +
-                '<div class="row">' +
-                '<div class="col-md-6"><div>NIT</div></div>' +
-                '<div class="col-md-6"><div class="row"><div class="col-md-9"><p>' + d['client_cedula'] + '</p></div><div class="col-md-3"><i data-field="NIT" data-col="client_cedula" data-cid="' + d['client_id'] + '" class="fa fa-pencil edit" aria-hidden="true"></i></div></div></div>' +
+                '<div class="col-md-6"><div>Nit ó Cédula Tercero Asociado</div></div>' +
+                '<div class="col-md-6"><div class="row"><div class="col-md-9"><p>' + d['client_cedula'] + '</p></div><div class="col-md-3"><b style="padding-rigth:5;">Modificar</b> <i data-field="NIT" data-col="client_cedula" data-cid="' + d['client_id'] + '" class="fa fa-pencil edit" aria-hidden="true"></i></div></div></div>' +
                 '</div>' +
                 '<div class="row">' +
                 '<div class="col-md-6"><div>Contraseña</div></div>' +
-                '<div class="col-md-6"><div class="row"><div class="col-md-9"><p>' + d['client_password'] + '</p></div><div class="col-md-3"><i class="fa fa-lock cambiarClaveBtn" aria-hidden="true"></i></div></div></div>' +
+                '<div class="col-md-6"><div class="row"><div class="col-md-9"><p type="password">***********</p></div><div class="col-md-3"><b style="padding-rigth:5;">Modificar</b> <i class="fa fa-lock cambiarClaveBtn" aria-hidden="true"></i></div></div></div>' +
                 '</div></div>';
 
             $('.cambiarDatosFormCtnr').html(html);
@@ -1179,71 +1557,9 @@ function datos_usuario() {
     });
 }
 
-function cambiar_clave(newpassdata) {
-    console.log(newpassdata);
-    $('.loadingCtn').show();
-    $.ajax({
-        async: true,
-        type: 'post',
-        data: newpassdata,
-        url: 'src/controler.php?req=changepass',
-        success: function(res) {
-            console.log(res);
-            if (res == 1) {
-                $('.loadingCtn').fadeOut();
-                var iconStyle = 'font-size:18pt;color:green;float:left;';
-                $('#dialog-message').html('<spam style="' + iconStyle + '" class="fa fa-thumbs-up" aria-hidden="true"></spam><p class="dialog_mess"> Su clave se ah actualizado exitosamente! Un mensaje se ah enviado a su correo electronico confirmando sus cambios.</p>');
-                $("#dialog-message").dialog({
-                    modal: true,
-                    title: 'Exito!',
-                    buttons: {
-                        Ok: function() {
-                            datos_usuario()
-                            $(this).dialog("close");
-                        }
-                    }
-                });
-
-            }
-        }
-    });
-}
-
-function editar_dato_usuario(data, id) {
-    $('.loadingCtn').show();
-    var newd = data.split('=');
-    var s = newd[0] + "='" + newd[1] + "'";
-    var obj = { key: newd[0], d: newd[1], field: s };
-    $.ajax({
-        async: true,
-        type: 'post',
-        data: { obj: JSON.stringify(obj) },
-        url: 'src/controler.php?req=edituser',
-        success: function(res) {
-            console.log(res);
-            if (res == 1) {
-                $('.loadingCtn').fadeOut();
-                var iconStyle = 'font-size:18pt;color:green;float:left;';
-                $('#dialog-message').html('<spam style="' + iconStyle + '" class="fa fa-thumbs-up" aria-hidden="true"></spam><p class="dialog_mess"> Su informacion ah sido actualizada exitosamente!</p>');
-                $("#dialog-message").dialog({
-                    modal: true,
-                    title: 'Exito!',
-                    buttons: {
-                        Ok: function() {
-                            datos_usuario()
-                            $(this).dialog("close");
-                        }
-                    }
-                });
-
-            }
 
 
-        }
-    });
 
-
-}
 
 function info_y_contacto_de_empresa() {
     $.ajax({
@@ -1328,6 +1644,21 @@ function info_y_contacto_de_empresa() {
 
             $('.dash').append(html);
 
+        }
+    });
+}
+
+function client_info() {
+    $.ajax({
+        async: true,
+        type: 'get',
+        url: 'src/controler.php?req=infouser',
+        success: function(res) {
+            var d = JSON.parse(res);
+            $('.client_info_name').text(d['client_name']);
+            $('.client_info_last_name').text(d['client_lastname']);
+            $('.client_info_email').text(d['client_email']);
+            $('.client_info_nit').text(d['client_cedula'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
         }
     });
 }

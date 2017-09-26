@@ -6,10 +6,13 @@ include 'dbcred.php';
 require_once('Doc.php');
 require_once('Log.php');
 require_once('Files.php');
+require_once('Reg.php');
 
 
-$bot = new Files($db);
-echo $bot->check_user();
+$bot = new Reg($db);
+echo $bot->getSenderEmail($id = 1);
+print_r($bot->getSenderEmail($id = 1));
+echo $bot->ReSendRegEmail('haranzalez@gmail.com');
 //echo $doc->folder_list();
 
 //var_dump($doc->folder_list());

@@ -75,22 +75,26 @@
                     d.alias_cntcto,
                     d.tlfno_fjo,
                     d.tlfno_mvil,
-                    d.email_cntcto
+                    d.email_cntcto,
+                    e.nmbre_dpto
                FROM emprsas a,   
                     paises b,   
                     mncpios c,
-                    cntctos_emprsas d
+                    cntctos_emprsas d,
+                    dptos e
            
               WHERE ( a.cdgo_pais = b.cdgo_pais ) and  
                     ( b.cdgo_pais = c.cdgo_pais ) and  
                     ( a.cdgo_dpto = c.cdgo_dpto ) and  
                     ( a.cdgo_mncpio = c.cdgo_mncpio ) and
+                    ( a.cdgo_dpto = e.cdgo_dpto ) and
                     (a.id_emprsa = d.id_emprsa) AND
                     ( a.id_emprsa = '".$row['id_emprsa']."' )";
                     $res2 = $this->_conn->query($sql2);
                     while($row2 = $res2->fetch(PDO::FETCH_ASSOC)){
                         $row['nmbre_pais'] = $row2['nmbre_pais'];
                         $row['nmbre_mncpio'] = $row2['nmbre_mncpio'];
+                        $row['nmbre_dpto'] = $row2['nmbre_dpto'];
                         $row['nmbre_cntcto'] = $row2['nmbre_cntcto'];
                         $row['alias_cntcto'] = $row2['alias_cntcto'];
                         $row['tlfno_fjo'] = $row2['tlfno_fjo'];

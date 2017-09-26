@@ -8,13 +8,13 @@
                 <div class="col-md-1"></div>
                 <div class="col-md-9">
                     <div class="row">
-                        <div class="col-md-2"><img src="img/logo_ppal.png" alt=""></div>
+                        <div class="col-md-2"><img src="img/logo_ppal.png" alt=""><p style="font-size: 6pt;text-align: center;margin-left: 18px;margin-top: -6;width: 160;padding: 0px !important;">Un Producto SQL SOLUCIONES INFORMATICAS SAS</p></div>
                         <div class="col-md-10">
-                            <p style="text-align:center;text-align: center;width: 280;margin: auto;margin-top: 10;font-size:9pt;">
+                            <p style="text-align:center;width: 280;margin: auto;margin-top: 10;font-size:8pt;color:black;">
                                 SQL SOLUCIONES INFORMATICAS SAS<br/>
                                 Tel: (572) 5242436<br/>
-                                <a href="http://www.sqlsoluciones.com">www.sqlsoluciones.com</a><br/>
-                                <a href="mailto:info@sqlsoluciones.com">info@sqlsoluciones.com</a>
+                                <a style="color:black;" target="blank" href="http://www.sqlsoluciones.com">www.sqlsoluciones.com</a><br/>
+                                <a style="color:black;" target="blank" href="mailto:info@sqlsoluciones.com">info@sqlsoluciones.com</a>
                             </p>
                         </div>
                     </div>
@@ -28,9 +28,10 @@
         <div class="row subHead">
             <div class="col-md-12">
                 <ul class="navLinks ">
+                    <li><a href="index.php"><i class="fa fa-home" aria-hidden="true"></i> Inicio</a></li>
                     <li><i class="fa fa-users" aria-hidden="true"></i> Quienes Somos</li>
                     <li><i class="fa fa-gavel" aria-hidden="true"></i> Normatividad</li>
-                    <li><i class="fa fa-phone" aria-hidden="true"></i> Contactenos</li>
+                    <li><a href="contact.php"><i class="fa fa-phone" aria-hidden="true"></i> Contactenos</a></li>
                 </ul>
             </div>
         </div>
@@ -47,7 +48,7 @@
        <!-- REGISTRATION FORM -->
        <form id="regForm">
        <div class="row input_field">
-           <div class="col-md-12"><input required data-parsley-required-message="Su correo electronico es mandatorio" type="email" name="client_email" placeholder="* Correo electronico"></div>
+           <div class="col-md-12"><input required data-parsley-required-message="Su correo electrónico es mandatorio" type="email" name="client_email" placeholder="* Correo electronico"></div>
        </div>
        <div class="row input_field">
            <div class="col-md-6" style="padding-right:2px;"><input required data-parsley-required-message="Su nombre es mandatorio" type="text" name="client_names" placeholder="* Nombres"></div>
@@ -59,13 +60,13 @@
            <div class="col-md-6" style="padding-left:2px;"><input type="text" name="client_mobile" placeholder="Teléfono móvil"></div>
        </div>
        <div class="row input_field">
-           <div class="col-md-12"><input id="pw" required data-parsley-required-message="Porfavor elija una clave de acceso" type="password" name="client_pass" placeholder="*Contraseña"></div>
+           <div class="col-md-12"><input id="pw" required data-parsley-required-message="Porfavor elija una contraseña" type="password" name="client_pass" placeholder="* Contraseña"></div>
        </div>
        <div class="row input_field">
-           <div class="col-md-12"><input required data-parsley-equalto="#pw" data-parsley-required-message="Porfavor confirme su clave" type="password" placeholder="*Confirmar contraseña"></div>
+           <div class="col-md-12"><input required data-parsley-equalto="#pw" data-parsley-required-message="Porfavor confirme su clave" type="password" placeholder="* Confirmar contraseña"></div>
        </div>
        <div class="row input_field">
-           <div class="col-md-12"><input required data-parsley-required-message="Su cédula o NIT es mandatorio" type="text" name="client_nit" placeholder="*Nit o Cédula del Tercero a Asociar"></div>
+           <div class="col-md-12"><input required data-parsley-required-message="Su cédula o NIT es mandatorio" type="text" name="client_nit" placeholder="* Nit o Cédula del Tercero a Asociar"></div>
        </div>
        <div class="row input_field">
            <div class="col-md-12"><button type="button" class="regSubBtn">Registrarse</button></div>
@@ -243,7 +244,7 @@
             </div><!--STOCK TABLE ENDS-->
 
             <div class="col-md-6 mainTitleContainer">
-                <h2 class="mainTitle">Nunca la información de sus proveedores, clientes y empleados estuvo tan cerca!</h2>
+                <h3 class="mainTitle">Nunca la información de sus proveedores, clientes y empleados estuvo tan cerca!</h3>
                 <div class="row" style="position:relative;margin:0px !important;padding:0px !important">
                     <div class="col-md-3" style="margin:0px !important;padding:0px !important">
                         <button class="registrarseBtn" type="button" onclick="$('.formContainer').fadeIn();$('.log_box_title b').text('Formulario de Registro');">No se ha Registrado?</button>
@@ -259,12 +260,12 @@
        
 
         <div class="row otherLinks"><!--PARTNERS -->
-            <h2 style="">Links de Interes</h2>
+            <h3 style="">Links de Interes</h3>
             <div class="col-md-2"></div>
-            <div class="col-md-2"><a href="htp://www.sqlsoluciones.com"><img src="img/sql.png" alt=""></a></div>
-            <div class="col-md-2"><a href="http://www.supersociedades.gov.co/"><img src="img/super.png" alt=""></a></div>
-            <div class="col-md-2"><a href="http://www.dian.gov.co/"><img src="img/dian.png" alt=""></a></div>
-            <div class="col-md-2"><a href="http://www.banrep.gov.co/"><img class="bancoRepImg" src="img/BancoRepublica.png" alt=""></a></div>
+            <div class="col-md-2"><a target="blank" href="http://www.sqlsoluciones.com"><img src="img/sql.png" alt=""></a></div>
+            <div class="col-md-2"><a target="blank" href="http://www.supersociedades.gov.co/"><img src="img/super.png" alt=""></a></div>
+            <div class="col-md-2"><a target="blank" href="http://www.dian.gov.co/"><img src="img/dian.png" alt=""></a></div>
+            <div class="col-md-2"><a target="blank" href="http://www.banrep.gov.co/"><img class="bancoRepImg" src="img/BancoRepublica.png" alt=""></a></div>
             <div class="col-md-2"></div>
             
         </div><!--PARTNERS ENDS-->
@@ -272,8 +273,8 @@
     <!--MAIN CONTENT ENDS-->
 
    <footer style="text-align: center;padding: 13px;border-top: 1px solid darkred;width:50%;margin:auto;">
-        <img style="width:150px;" src="img/watermark.png" alt="">
-        <p style="color: #C0C5CB">&copy;2017. Todos los derechos reservados.</p>
+        <img style="width:100px;" src="img/watermark.png" alt="">
+        <p style="color: black;font-size:10pt;">&copy;2017. Todos los derechos reservados.</p>
     </footer>
 
    
@@ -330,13 +331,49 @@
 
        $("#login-dialog-modal").on('click','.recuPassBtn', function(){
            $("#login-dialog-modal").dialog("close");
-           $("#regForm").hide();
-           $(".log_box_title b").text('Enviar contraseña');
-           $("#recPassForm").show();
+           //$("#regForm").hide();
+           //$(".log_box_title b").text('Enviar contraseña');
+           //$("#recPassForm").show();
+           var email = $('#regForm').find('input[type="email"]').val();
+           $.ajax({
+                async: true,
+                type: "get",
+                url: "src/controler.php?req=pass&client_email="+email,
+                success: function(res) {
+                    console.log(res);
+                    if(res == 1)
+                    {
+                        $('#login-dialog-modal').html('<spam style="color:green;float:left" class="fa fa-check" aria-hidden="true"></spam><p class="dialog_mess">Se ha enviado un email a su cuenta registrada Por favor revise su correo electrónico. Diríjase luego por la Opción: Ingreso de Usuarios Registrados</p>');
+                            $("#login-dialog-modal").dialog({
+                                modal: true,
+                                title: 'Exito!',
+                                buttons: {
+                                    Ok: function() {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
+                           
+                    }else{
+                        $('#login-dialog-modal').html('<spam style="color:orange;float:left" class="fa fa-warning" aria-hidden="true"></spam><p class="dialog_mess">El Correo electrónico suministrado no existe Creado en nuestros registros.</p>');
+                        $("#login-dialog-modal").dialog({
+                            modal: true,
+                            title: 'Atencion!',
+                            buttons: {
+                                Ok: function() {
+                                    $(this).dialog("close");
+                                }
+                            }
+                        });
+                        
+                    }
+                }
+            });
+           
+
        });
-       $('#carousel').carousel({
-        interval: 2000
-        });
+      
+
 
        
     </script>
